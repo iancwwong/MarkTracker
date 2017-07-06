@@ -1,2 +1,15 @@
 # Planning backup files
 doc/\~*
+
+# Tutorial stuff
+learning/
+
+# Files related to visual studio in src
+src/.vs/
+src/bin/
+src/obj/
+src/Properties/
+src/App.config
+src/*.resx
+src/MarkTracker.csproj
+src/MarkTracker.sln
