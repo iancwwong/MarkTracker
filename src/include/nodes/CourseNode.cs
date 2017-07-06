@@ -17,9 +17,12 @@ namespace MarkTracker.include.nodes {
         /**
          * Constructor
          */
-        public CourseNode(string courseName) : base(courseName) {
+        public CourseNode(string courseName, ContextMenuStrip cms) : base(courseName) {
             this.course = new Course();
             this.course.name = courseName;
+
+            /* right click submenu / context menu strip */
+            this.ContextMenuStrip = cms;
         }
     }
 }
