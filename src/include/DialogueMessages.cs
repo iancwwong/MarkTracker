@@ -10,5 +10,8 @@ namespace MarkTracker.include {
 
         /* Course related messages */
         public const string COURSE_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected course?";
+
+        /* Assessment related messages */
+        public const string ASSESSMENT_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected assessment?";
     }
 }

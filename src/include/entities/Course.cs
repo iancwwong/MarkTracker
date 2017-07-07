@@ -9,8 +9,9 @@ namespace MarkTracker.include.entities {
     /**
      * Represents a course
      */
-    class Course {
+    public class Course {
         public string name { get; set; }
-        // public List<Assessment> assessments { get; set; }
+        public int id { get; set; }
+        public List<Assessment> assessments { get; set; }
     }
 }
