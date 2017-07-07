@@ -36,22 +36,22 @@
             this.numberOfParticipantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.apCourseContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.assessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCourseCM_new_assessment = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCourseCM_rename = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCourse_edit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCourseCM_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.apAssessmentContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.componentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.apAssessmentCM_new_component = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.apAssessmentCM_rename = new System.Windows.Forms.ToolStripMenuItem();
+            this.apAssessmentCM_edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apAssessmentCM_view_statistics = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.apAssessmentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -142,127 +142,132 @@
             this.apCourseContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem1,
             this.toolStripSeparator2,
-            this.renameToolStripMenuItem,
-            this.editToolStripMenuItem,
+            this.apCourseCM_rename,
+            this.apCourse_edit,
             this.toolStripSeparator1,
-            this.deleteToolStripMenuItem});
+            this.apCourseCM_delete});
             this.apCourseContextMenu.Name = "apCourseContextMenu";
-            this.apCourseContextMenu.Size = new System.Drawing.Size(118, 104);
+            this.apCourseContextMenu.Size = new System.Drawing.Size(153, 126);
             // 
             // newToolStripMenuItem1
             // 
             this.newToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.assessmentToolStripMenuItem});
+            this.apCourseCM_new_assessment});
             this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
-            this.newToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem1.Text = "New";
             // 
-            // assessmentToolStripMenuItem
+            // apCourseCM_new_assessment
             // 
-            this.assessmentToolStripMenuItem.Name = "assessmentToolStripMenuItem";
-            this.assessmentToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.assessmentToolStripMenuItem.Text = "Assessment";
-            this.assessmentToolStripMenuItem.Click += new System.EventHandler(this.assessmentToolStripMenuItem_Click);
+            this.apCourseCM_new_assessment.Name = "apCourseCM_new_assessment";
+            this.apCourseCM_new_assessment.Size = new System.Drawing.Size(152, 22);
+            this.apCourseCM_new_assessment.Text = "Assessment";
+            this.apCourseCM_new_assessment.Click += new System.EventHandler(this.apCourseCM_new_assessment_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(114, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
-            // renameToolStripMenuItem
+            // apCourseCM_rename
             // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            this.apCourseCM_rename.Name = "apCourseCM_rename";
+            this.apCourseCM_rename.Size = new System.Drawing.Size(152, 22);
+            this.apCourseCM_rename.Text = "Rename";
+            this.apCourseCM_rename.Click += new System.EventHandler(this.apCourseCM_rename_Click);
             // 
-            // editToolStripMenuItem
+            // apCourse_edit
             // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            this.apCourse_edit.Name = "apCourse_edit";
+            this.apCourse_edit.Size = new System.Drawing.Size(152, 22);
+            this.apCourse_edit.Text = "Edit";
+            this.apCourse_edit.Click += new System.EventHandler(this.apCourseCM_edit_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(114, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
-            // deleteToolStripMenuItem
+            // apCourseCM_delete
             // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            this.apCourseCM_delete.Name = "apCourseCM_delete";
+            this.apCourseCM_delete.Size = new System.Drawing.Size(152, 22);
+            this.apCourseCM_delete.Text = "Delete";
+            this.apCourseCM_delete.Click += new System.EventHandler(this.apCourseCM_delete_Click);
             // 
             // apAssessmentContextMenu
             // 
             this.apAssessmentContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem2,
             this.toolStripSeparator5,
-            this.renameToolStripMenuItem1,
-            this.editToolStripMenuItem1,
+            this.apAssessmentCM_rename,
+            this.apAssessmentCM_edit,
             this.viewToolStripMenuItem,
             this.toolStripSeparator4,
-            this.deleteToolStripMenuItem1});
+            this.apAssessmentCM_delete});
             this.apAssessmentContextMenu.Name = "apAssessmentContextMenu";
             this.apAssessmentContextMenu.Size = new System.Drawing.Size(118, 126);
             // 
             // newToolStripMenuItem2
             // 
             this.newToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.componentToolStripMenuItem});
+            this.apAssessmentCM_new_component});
             this.newToolStripMenuItem2.Name = "newToolStripMenuItem2";
             this.newToolStripMenuItem2.Size = new System.Drawing.Size(117, 22);
             this.newToolStripMenuItem2.Text = "New";
             // 
-            // componentToolStripMenuItem
+            // apAssessmentCM_new_component
             // 
-            this.componentToolStripMenuItem.Name = "componentToolStripMenuItem";
-            this.componentToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.componentToolStripMenuItem.Text = "Component";
+            this.apAssessmentCM_new_component.Name = "apAssessmentCM_new_component";
+            this.apAssessmentCM_new_component.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_new_component.Text = "Component";
+            this.apAssessmentCM_new_component.Click += new System.EventHandler(this.apAssessmentCM_new_component_Click);
             // 
-            // renameToolStripMenuItem1
+            // toolStripSeparator5
             // 
-            this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
-            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
-            this.renameToolStripMenuItem1.Text = "Rename";
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(114, 6);
             // 
-            // editToolStripMenuItem1
+            // apAssessmentCM_rename
             // 
-            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
-            this.editToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
-            this.editToolStripMenuItem1.Text = "Edit";
+            this.apAssessmentCM_rename.Name = "apAssessmentCM_rename";
+            this.apAssessmentCM_rename.Size = new System.Drawing.Size(117, 22);
+            this.apAssessmentCM_rename.Text = "Rename";
+            this.apAssessmentCM_rename.Click += new System.EventHandler(this.apAssessmentCM_rename_Click);
+            // 
+            // apAssessmentCM_edit
+            // 
+            this.apAssessmentCM_edit.Name = "apAssessmentCM_edit";
+            this.apAssessmentCM_edit.Size = new System.Drawing.Size(117, 22);
+            this.apAssessmentCM_edit.Text = "Edit";
+            this.apAssessmentCM_edit.Click += new System.EventHandler(this.apAssessmentCM_edit_Click);
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statisticsToolStripMenuItem});
+            this.apAssessmentCM_view_statistics});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
-            // statisticsToolStripMenuItem
+            // apAssessmentCM_view_statistics
             // 
-            this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
-            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.statisticsToolStripMenuItem.Text = "Statistics";
-            // 
-            // deleteToolStripMenuItem1
-            // 
-            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
-            this.deleteToolStripMenuItem1.Text = "Delete";
+            this.apAssessmentCM_view_statistics.Name = "apAssessmentCM_view_statistics";
+            this.apAssessmentCM_view_statistics.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_view_statistics.Text = "Statistics";
+            this.apAssessmentCM_view_statistics.Click += new System.EventHandler(this.apAssessmentCM_view_statistics_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(114, 6);
             // 
-            // toolStripSeparator5
+            // apAssessmentCM_delete
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(114, 6);
+            this.apAssessmentCM_delete.Name = "apAssessmentCM_delete";
+            this.apAssessmentCM_delete.Size = new System.Drawing.Size(117, 22);
+            this.apAssessmentCM_delete.Text = "Delete";
+            this.apAssessmentCM_delete.Click += new System.EventHandler(this.apAssessmentCM_delete_Click);
             // 
             // markTrackerForm
             // 
@@ -294,23 +299,23 @@
         private System.Windows.Forms.ToolStripMenuItem numberOfParticipantsToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip apCourseContextMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem assessmentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apCourseCM_new_assessment;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apCourseCM_rename;
+        private System.Windows.Forms.ToolStripMenuItem apCourse_edit;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apCourseCM_delete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ContextMenuStrip apAssessmentContextMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem componentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apAssessmentCM_new_component;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem apAssessmentCM_rename;
+        private System.Windows.Forms.ToolStripMenuItem apAssessmentCM_edit;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem statisticsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apAssessmentCM_view_statistics;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem apAssessmentCM_delete;
     }
 }
 

@@ -18,7 +18,7 @@ namespace MarkTracker {
          * ATTRIBUTES
          * -----------------------------------
          */
-        private AssessmentPanelNode curRCNode;         /* The node that is right-clicked on */
+        private AssessmentPanelNode curAPNode;         /* The node that is right-clicked on */
 
         public markTrackerForm() {
             InitializeComponent();
@@ -39,7 +39,7 @@ namespace MarkTracker {
          */
         #region General Form Handlers
 
-        /**
+        /**curAPNode
         * -----------------------------------
         * ASSESSMENT PANEL (TREE VIEW)
         * -----------------------------------
@@ -52,7 +52,7 @@ namespace MarkTracker {
         private void getAPNodeFromClick(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) {
                 // Select the clicked node
-                this.curRCNode = assessmentPanel.GetNodeAt(e.X, e.Y) as AssessmentPanelNode;
+                this.curAPNode = assessmentPanel.GetNodeAt(e.X, e.Y) as AssessmentPanelNode;
             }
         }
 
@@ -91,7 +91,7 @@ namespace MarkTracker {
 
         #region Right clicking on Assessment Panel (AP)
 
-        #region Right-clicking on nothing
+                #region Right-clicking on nothing
 
         /**
          * "New -> Course"
@@ -127,13 +127,13 @@ namespace MarkTracker {
 
         #endregion
 
-                #region Right-clicking on a course
+        #region Right-clicking on a course
 
         /**
          * "New -> Assessment"
          */
-        private void assessmentToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (this.curRCNode != null) {
+        private void apCourseCM_new_assessment_Click(object sender, EventArgs e) {
+            if (this.curAPNode != null) {
                 /* Create a new assessment node for the associated course */
                 string newAssessmentName = "New Assessment";        /* default */
 
@@ -144,47 +144,78 @@ namespace MarkTracker {
                                             newAssessmentName,   /* default name of new course */
                                             this.apAssessmentContextMenu);
                 // newAssessmentNode.id = result
-                this.curRCNode.Nodes.Add(newAssessmentNode);
+                this.curAPNode.Nodes.Add(newAssessmentNode);
             }
         }
 
         /**
          * "Rename course"
          */
-        private void renameToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (this.curRCNode != null) {
+        private void apCourseCM_rename_Click(object sender, EventArgs e) {
+            if (this.curAPNode != null) {
                 /* Get the course node object */
-                AssessmentPanelNode cn = this.curRCNode;
+                AssessmentPanelNode cn = this.curAPNode;
 
                 /* change the text value */
                 cn.BeginEdit();
+
+                /* NOTE: The update in the DB is handled by the 
+                 * afterAPLabelEdit_handler function
+                 */
             }
         }
 
         /**
-         * Edit course - NOTE: SAME AS RENAME
+         * Edit course
          */
-        private void editToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (this.curRCNode != null) {
-                /* Get the course node object */
-                AssessmentPanelNode cn = this.curRCNode;
-
-                /* change the text value */
-                cn.BeginEdit();
+        private void apCourseCM_edit_Click(object sender, EventArgs e) {
+            if (this.curAPNode != null) {
+                /* Do the same thing as rename */
+                apCourseCM_rename_Click(sender, e);
             }
         }
 
         /**
          * Remove selected course
          */
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
-
+        private void apCourseCM_delete_Click(object sender, EventArgs e) {
             /* Prompt user to confirm */
             if (MessageBox.Show(DialogueMessages.COURSE_REMOVE_CONFIRMATION, "", MessageBoxButtons.OKCancel)
                 == DialogResult.OK) {
-                this.assessmentPanel.Nodes.Remove(this.curRCNode);
-                this.curRCNode = null;
+
+                /* Reflect change in DB */
+                // int result = this.db.deleteCourse(this.curAPNode.id);
+
+                this.assessmentPanel.Nodes.Remove(this.curAPNode);
+                this.curAPNode = null;
             }
+        }
+
+        #endregion
+
+        #region Right-clicking on an assessement
+
+        /**
+         * New -> Component
+         */
+        private void apAssessmentCM_new_component_Click(object sender, EventArgs e) {
+
+        }
+
+        private void apAssessmentCM_rename_Click(object sender, EventArgs e) {
+
+        }
+
+        private void apAssessmentCM_edit_Click(object sender, EventArgs e) {
+
+        }
+
+        private void apAssessmentCM_view_statistics_Click(object sender, EventArgs e) {
+
+        }
+
+        private void apAssessmentCM_delete_Click(object sender, EventArgs e) {
+
         }
 
         #endregion
@@ -192,5 +223,13 @@ namespace MarkTracker {
         #endregion
 
         #endregion
+
+
+
+
+
+
+
+
     }
 }
