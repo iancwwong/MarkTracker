@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.saveButton = new System.Windows.Forms.Button();
             this.nameLabel = new System.Windows.Forms.Label();
-            this.assessmentNameEditBox = new System.Windows.Forms.TextBox();
+            this.nameEditBox = new System.Windows.Forms.TextBox();
             this.dueDatePicker = new System.Windows.Forms.DateTimePicker();
             this.dueDateLabel = new System.Windows.Forms.Label();
             this.totalMarkLabel = new System.Windows.Forms.Label();
@@ -62,15 +62,15 @@
             this.nameLabel.TabIndex = 2;
             this.nameLabel.Text = "Name:";
             // 
-            // assessmentNameEditBox
+            // nameEditBox
             // 
-            this.assessmentNameEditBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.nameEditBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.assessmentNameEditBox.Location = new System.Drawing.Point(112, 25);
-            this.assessmentNameEditBox.Name = "assessmentNameEditBox";
-            this.assessmentNameEditBox.Size = new System.Drawing.Size(146, 20);
-            this.assessmentNameEditBox.TabIndex = 3;
+            this.nameEditBox.Location = new System.Drawing.Point(112, 25);
+            this.nameEditBox.Name = "nameEditBox";
+            this.nameEditBox.Size = new System.Drawing.Size(146, 20);
+            this.nameEditBox.TabIndex = 3;
             // 
             // dueDatePicker
             // 
@@ -214,7 +214,7 @@
             this.Controls.Add(this.totalMarkLabel);
             this.Controls.Add(this.dueDateLabel);
             this.Controls.Add(this.dueDatePicker);
-            this.Controls.Add(this.assessmentNameEditBox);
+            this.Controls.Add(this.nameEditBox);
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.saveButton);
             this.Name = "EditAssessmentForm";
@@ -231,7 +231,7 @@
 
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Label nameLabel;
-        private System.Windows.Forms.TextBox assessmentNameEditBox;
+        private System.Windows.Forms.TextBox nameEditBox;
         private System.Windows.Forms.DateTimePicker dueDatePicker;
         private System.Windows.Forms.Label dueDateLabel;
         private System.Windows.Forms.Label totalMarkLabel;
