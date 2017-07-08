@@ -116,7 +116,7 @@
             // apCM_new_course
             // 
             this.apCM_new_course.Name = "apCM_new_course";
-            this.apCM_new_course.Size = new System.Drawing.Size(152, 22);
+            this.apCM_new_course.Size = new System.Drawing.Size(111, 22);
             this.apCM_new_course.Text = "Course";
             this.apCM_new_course.Click += new System.EventHandler(this.apCM_new_course_Click);
             // 
@@ -171,7 +171,7 @@
             // apCourseCM_new_assessment
             // 
             this.apCourseCM_new_assessment.Name = "apCourseCM_new_assessment";
-            this.apCourseCM_new_assessment.Size = new System.Drawing.Size(152, 22);
+            this.apCourseCM_new_assessment.Size = new System.Drawing.Size(136, 22);
             this.apCourseCM_new_assessment.Text = "Assessment";
             this.apCourseCM_new_assessment.Click += new System.EventHandler(this.apCourseCM_new_assessment_Click);
             // 
@@ -224,32 +224,32 @@
             this.apAssessmentCM_new.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.apAssessmentCM_new_component});
             this.apAssessmentCM_new.Name = "apAssessmentCM_new";
-            this.apAssessmentCM_new.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_new.Size = new System.Drawing.Size(117, 22);
             this.apAssessmentCM_new.Text = "New";
             // 
             // apAssessmentCM_new_component
             // 
             this.apAssessmentCM_new_component.Name = "apAssessmentCM_new_component";
-            this.apAssessmentCM_new_component.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_new_component.Size = new System.Drawing.Size(138, 22);
             this.apAssessmentCM_new_component.Text = "Component";
             this.apAssessmentCM_new_component.Click += new System.EventHandler(this.apAssessmentCM_new_component_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(114, 6);
             // 
             // apAssessmentCM_rename
             // 
             this.apAssessmentCM_rename.Name = "apAssessmentCM_rename";
-            this.apAssessmentCM_rename.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_rename.Size = new System.Drawing.Size(117, 22);
             this.apAssessmentCM_rename.Text = "Rename";
             this.apAssessmentCM_rename.Click += new System.EventHandler(this.apAssessmentCM_rename_Click);
             // 
             // apAssessmentCM_edit
             // 
             this.apAssessmentCM_edit.Name = "apAssessmentCM_edit";
-            this.apAssessmentCM_edit.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_edit.Size = new System.Drawing.Size(117, 22);
             this.apAssessmentCM_edit.Text = "Edit";
             this.apAssessmentCM_edit.Click += new System.EventHandler(this.apAssessmentCM_edit_Click);
             // 
@@ -264,19 +264,19 @@
             // apAssessmentCM_view_statistics
             // 
             this.apAssessmentCM_view_statistics.Name = "apAssessmentCM_view_statistics";
-            this.apAssessmentCM_view_statistics.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_view_statistics.Size = new System.Drawing.Size(120, 22);
             this.apAssessmentCM_view_statistics.Text = "Statistics";
             this.apAssessmentCM_view_statistics.Click += new System.EventHandler(this.apAssessmentCM_view_statistics_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(114, 6);
             // 
             // apAssessmentCM_delete
             // 
             this.apAssessmentCM_delete.Name = "apAssessmentCM_delete";
-            this.apAssessmentCM_delete.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_delete.Size = new System.Drawing.Size(117, 22);
             this.apAssessmentCM_delete.Text = "Delete";
             this.apAssessmentCM_delete.Click += new System.EventHandler(this.apAssessmentCM_delete_Click);
             // 
@@ -291,14 +291,14 @@
             this.toolStripSeparator7,
             this.apComponentCM_delete});
             this.apComponentContextMenu.Name = "apComponentContextMenu";
-            this.apComponentContextMenu.Size = new System.Drawing.Size(118, 126);
+            this.apComponentContextMenu.Size = new System.Drawing.Size(153, 148);
             // 
             // apComponentCM_new
             // 
             this.apComponentCM_new.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.apComponentCM_new_component});
             this.apComponentCM_new.Name = "apComponentCM_new";
-            this.apComponentCM_new.Size = new System.Drawing.Size(117, 22);
+            this.apComponentCM_new.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_new.Text = "New";
             // 
             // apComponentCM_new_component
@@ -306,30 +306,33 @@
             this.apComponentCM_new_component.Name = "apComponentCM_new_component";
             this.apComponentCM_new_component.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_new_component.Text = "Component";
+            this.apComponentCM_new_component.Click += new System.EventHandler(this.apComponentCM_new_component_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
             // 
             // apComponentCM_rename
             // 
             this.apComponentCM_rename.Name = "apComponentCM_rename";
-            this.apComponentCM_rename.Size = new System.Drawing.Size(117, 22);
+            this.apComponentCM_rename.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_rename.Text = "Rename";
+            this.apComponentCM_rename.Click += new System.EventHandler(this.apComponentCM_rename_Click);
             // 
             // apComponentCM_edit
             // 
             this.apComponentCM_edit.Name = "apComponentCM_edit";
-            this.apComponentCM_edit.Size = new System.Drawing.Size(117, 22);
+            this.apComponentCM_edit.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_edit.Text = "Edit";
+            this.apComponentCM_edit.Click += new System.EventHandler(this.apComponentCM_edit_Click);
             // 
             // apComponentCM_view
             // 
             this.apComponentCM_view.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.apComponentCM_view_statistics});
             this.apComponentCM_view.Name = "apComponentCM_view";
-            this.apComponentCM_view.Size = new System.Drawing.Size(117, 22);
+            this.apComponentCM_view.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_view.Text = "View";
             // 
             // apComponentCM_view_statistics
@@ -337,17 +340,19 @@
             this.apComponentCM_view_statistics.Name = "apComponentCM_view_statistics";
             this.apComponentCM_view_statistics.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_view_statistics.Text = "Statistics";
+            this.apComponentCM_view_statistics.Click += new System.EventHandler(this.apComponentCM_view_statistics_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(114, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(149, 6);
             // 
             // apComponentCM_delete
             // 
             this.apComponentCM_delete.Name = "apComponentCM_delete";
-            this.apComponentCM_delete.Size = new System.Drawing.Size(117, 22);
+            this.apComponentCM_delete.Size = new System.Drawing.Size(152, 22);
             this.apComponentCM_delete.Text = "Delete";
+            this.apComponentCM_delete.Click += new System.EventHandler(this.apComponentCM_delete_Click);
             // 
             // markTrackerForm
             // 

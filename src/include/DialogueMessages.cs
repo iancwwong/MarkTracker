@@ -13,5 +13,8 @@ namespace MarkTracker.include {
 
         /* Assessment related messages */
         public const string ASSESSMENT_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected assessment?";
+
+        /* Course related message */
+        public const string COMPONENT_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected component?";
     }
 }

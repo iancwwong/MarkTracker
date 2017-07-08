@@ -54,6 +54,42 @@ namespace MarkTracker.include.db {
 
         /**
          * ------------------------------------
+         * COURSE MANAGEMENT FUNCTIONS
+         * ------------------------------------
+         */
+        #region Course Management Functions
+
+        #endregion
+
+        /**
+         * ------------------------------------
+         * ASSESSMENT MANAGEMENT FUNCTIONS
+         * ------------------------------------
+         */
+        #region Assessment Management Functions
+
+        #endregion
+
+        /**
+         * ------------------------------------
+         * COMPONENT MANAGEMENT FUNCTIONS
+         * ------------------------------------
+         */
+        #region Component Management Functions
+
+        /**
+         * Adds a new component given minimal info.
+         * "parentComponentID":         null when creating a root component
+         * "associatedAssessmentID":    null when creating a child component
+         */ 
+        int addNewComponent(string newComponentName, 
+                            Nullable<int> parentComponentID,        
+                            Nullable<int> associatedAssessmentID);
+
+        #endregion
+
+        /**
+         * ------------------------------------
          * OTHER USEFUL FUNCTIONS
          * ------------------------------------
          */

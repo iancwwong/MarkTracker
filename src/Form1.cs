@@ -24,7 +24,7 @@ namespace MarkTracker {
         private UITreeViewNode curAPNode;
 
         /* The node that is right-clicked on from the assessment panel */
-        private UITreeViewNode curPPNode;
+        // private UITreeViewNode curPPNode;
 
         /**
          * -----------------------------------

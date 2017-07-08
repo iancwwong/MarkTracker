@@ -16,7 +16,7 @@ namespace MarkTracker.include.nodes {
         /* Parent node */
         public UITreeViewNode parentNode { get; set; }
         
-
+        /* Constructor */
         public UITreeViewNode(EntityConstants.EntityType eType, string name, UITreeViewNode parent, ContextMenuStrip cms) : base(name) {
             this.type = eType;
             this.parentNode = parent;
