@@ -28,12 +28,12 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.assessmentPanel = new System.Windows.Forms.TreeView();
             this.apContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.courseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCM_new = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCM_new_course = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.sortByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.numberOfParticipantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCM_sort = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCM_sort_name = new System.Windows.Forms.ToolStripMenuItem();
+            this.apCM_sort_numParticipants = new System.Windows.Forms.ToolStripMenuItem();
             this.apCourseContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.apCourseCM_new_assessment = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +60,8 @@
             this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -97,54 +99,54 @@
             // apContextMenu
             // 
             this.apContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
+            this.apCM_new,
             this.toolStripSeparator3,
-            this.sortByToolStripMenuItem});
+            this.apCM_sort});
             this.apContextMenu.Name = "apContextMenu";
-            this.apContextMenu.Size = new System.Drawing.Size(112, 54);
+            this.apContextMenu.Size = new System.Drawing.Size(153, 76);
             // 
-            // newToolStripMenuItem
+            // apCM_new
             // 
-            this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.courseToolStripMenuItem});
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.newToolStripMenuItem.Text = "New";
+            this.apCM_new.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.apCM_new_course});
+            this.apCM_new.Name = "apCM_new";
+            this.apCM_new.Size = new System.Drawing.Size(152, 22);
+            this.apCM_new.Text = "New";
             // 
-            // courseToolStripMenuItem
+            // apCM_new_course
             // 
-            this.courseToolStripMenuItem.Name = "courseToolStripMenuItem";
-            this.courseToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.courseToolStripMenuItem.Text = "Course";
-            this.courseToolStripMenuItem.Click += new System.EventHandler(this.courseToolStripMenuItem_Click);
+            this.apCM_new_course.Name = "apCM_new_course";
+            this.apCM_new_course.Size = new System.Drawing.Size(152, 22);
+            this.apCM_new_course.Text = "Course";
+            this.apCM_new_course.Click += new System.EventHandler(this.apCM_new_course_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(108, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
-            // sortByToolStripMenuItem
+            // apCM_sort
             // 
-            this.sortByToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.nameToolStripMenuItem,
-            this.numberOfParticipantsToolStripMenuItem});
-            this.sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
-            this.sortByToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.sortByToolStripMenuItem.Text = "Sort By";
+            this.apCM_sort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.apCM_sort_name,
+            this.apCM_sort_numParticipants});
+            this.apCM_sort.Name = "apCM_sort";
+            this.apCM_sort.Size = new System.Drawing.Size(152, 22);
+            this.apCM_sort.Text = "Sort By";
             // 
-            // nameToolStripMenuItem
+            // apCM_sort_name
             // 
-            this.nameToolStripMenuItem.Name = "nameToolStripMenuItem";
-            this.nameToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.nameToolStripMenuItem.Text = "Name";
-            this.nameToolStripMenuItem.Click += new System.EventHandler(this.nameToolStripMenuItem_Click);
+            this.apCM_sort_name.Name = "apCM_sort_name";
+            this.apCM_sort_name.Size = new System.Drawing.Size(197, 22);
+            this.apCM_sort_name.Text = "Name";
+            this.apCM_sort_name.Click += new System.EventHandler(this.apCM_sort_name_Click);
             // 
-            // numberOfParticipantsToolStripMenuItem
+            // apCM_sort_numParticipants
             // 
-            this.numberOfParticipantsToolStripMenuItem.Name = "numberOfParticipantsToolStripMenuItem";
-            this.numberOfParticipantsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.numberOfParticipantsToolStripMenuItem.Text = "Number of participants";
-            this.numberOfParticipantsToolStripMenuItem.Click += new System.EventHandler(this.numberOfParticipantsToolStripMenuItem_Click);
+            this.apCM_sort_numParticipants.Name = "apCM_sort_numParticipants";
+            this.apCM_sort_numParticipants.Size = new System.Drawing.Size(197, 22);
+            this.apCM_sort_numParticipants.Text = "Number of participants";
+            this.apCM_sort_numParticipants.Click += new System.EventHandler(this.apCM_sort_numParticipants_Click);
             // 
             // apCourseContextMenu
             // 
@@ -228,7 +230,7 @@
             // apAssessmentCM_new_component
             // 
             this.apAssessmentCM_new_component.Name = "apAssessmentCM_new_component";
-            this.apAssessmentCM_new_component.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_new_component.Size = new System.Drawing.Size(138, 22);
             this.apAssessmentCM_new_component.Text = "Component";
             this.apAssessmentCM_new_component.Click += new System.EventHandler(this.apAssessmentCM_new_component_Click);
             // 
@@ -262,7 +264,7 @@
             // apAssessmentCM_view_statistics
             // 
             this.apAssessmentCM_view_statistics.Name = "apAssessmentCM_view_statistics";
-            this.apAssessmentCM_view_statistics.Size = new System.Drawing.Size(152, 22);
+            this.apAssessmentCM_view_statistics.Size = new System.Drawing.Size(120, 22);
             this.apAssessmentCM_view_statistics.Text = "Statistics";
             this.apAssessmentCM_view_statistics.Click += new System.EventHandler(this.apAssessmentCM_view_statistics_Click);
             // 
@@ -282,37 +284,39 @@
             // 
             this.apComponentContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem3,
+            this.toolStripSeparator6,
             this.renameToolStripMenuItem,
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem1,
+            this.toolStripSeparator7,
             this.deleteToolStripMenuItem});
             this.apComponentContextMenu.Name = "apComponentContextMenu";
-            this.apComponentContextMenu.Size = new System.Drawing.Size(153, 136);
+            this.apComponentContextMenu.Size = new System.Drawing.Size(118, 126);
             // 
             // newToolStripMenuItem3
             // 
             this.newToolStripMenuItem3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.componentToolStripMenuItem});
             this.newToolStripMenuItem3.Name = "newToolStripMenuItem3";
-            this.newToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem3.Size = new System.Drawing.Size(117, 22);
             this.newToolStripMenuItem3.Text = "New";
             // 
             // componentToolStripMenuItem
             // 
             this.componentToolStripMenuItem.Name = "componentToolStripMenuItem";
-            this.componentToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.componentToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.componentToolStripMenuItem.Text = "Component";
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // viewToolStripMenuItem1
@@ -320,20 +324,30 @@
             this.viewToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statisticsToolStripMenuItem});
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
             this.viewToolStripMenuItem1.Text = "View";
             // 
             // statisticsToolStripMenuItem
             // 
             this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
-            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.statisticsToolStripMenuItem.Text = "Statistics";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(114, 6);
             // 
             // markTrackerForm
             // 
@@ -359,11 +373,11 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TreeView assessmentPanel;
         private System.Windows.Forms.ContextMenuStrip apContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem courseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sortByToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem numberOfParticipantsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem apCM_new;
+        private System.Windows.Forms.ToolStripMenuItem apCM_new_course;
+        private System.Windows.Forms.ToolStripMenuItem apCM_sort;
+        private System.Windows.Forms.ToolStripMenuItem apCM_sort_name;
+        private System.Windows.Forms.ToolStripMenuItem apCM_sort_numParticipants;
         private System.Windows.Forms.ContextMenuStrip apCourseContextMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem apCourseCM_new_assessment;
@@ -391,6 +405,8 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem statisticsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     }
 }
 

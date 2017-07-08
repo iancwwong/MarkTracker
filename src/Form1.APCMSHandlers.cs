@@ -16,19 +16,17 @@ namespace MarkTracker {
 
         /**
 		 * -----------------------------------
-		 * CONTEXT MENU STRIP HANDLERS
+		 * CONTEXT MENU STRIP HANDLERS FOR AP
 		 * -----------------------------------
 		 */
         #region Context Menu Strips Handlers - occurs when a right click is made
-
-        #region Right clicking on Assessment Panel (AP)
 
         #region Right-clicking on nothing
 
         /**
          * "New -> Course"
          */
-        private void courseToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void apCM_new_course_Click(object sender, EventArgs e) {
             /* Create a new node that corresponds to a new course */
             string newCourseName = "New Course";        /* default */
 
@@ -46,14 +44,14 @@ namespace MarkTracker {
         /**
          * "Sort By -> Name"
          */
-        private void nameToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void apCM_sort_name_Click(object sender, EventArgs e) {
             /* Sort the courses by Name */
         }
 
         /**
          * "Sort By -> Number of Participants"
          */
-        private void numberOfParticipantsToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void apCM_sort_numParticipants_Click(object sender, EventArgs e) {
             /* Sort the courses by number of participants */
         }
 
@@ -213,8 +211,6 @@ namespace MarkTracker {
                 }
             }
         }
-
-        #endregion
 
         #endregion
 
