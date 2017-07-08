@@ -30,5 +30,12 @@ namespace MarkTracker.include.forms {
              * populate UI with the original data
              */
         }
+
+        /**
+         * Close the form
+         */
+        private void cancelButton_Click(object sender, EventArgs e) {
+            this.Close();
+        }
     }
 }
