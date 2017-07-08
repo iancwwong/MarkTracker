@@ -1,4 +1,5 @@
 ﻿using MarkTracker.include;
+using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
 using System;
 using System.Collections.Generic;
@@ -244,6 +245,8 @@ namespace MarkTracker {
             /* Create the assessment edit form */
             //Assessment assessment = this.db.getAssessment(this.curAPNode.id);
             EditAssessmentForm eaf = new EditAssessmentForm(null);
+            eaf.Show();
+
         }
 
         /**
