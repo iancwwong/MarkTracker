@@ -12,6 +12,5 @@ namespace MarkTracker.include.entities {
     public class Course {
         public string name { get; set; }
         public int id { get; set; }
-        public List<Assessment> assessments { get; set; }
     }
 }

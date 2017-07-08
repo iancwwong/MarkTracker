@@ -5,6 +5,7 @@ doc/\~*
 learning/
 
 # Files related to visual studio in src
+.vs/
 src/.vs/
 src/bin/
 src/obj/
@@ -13,3 +14,9 @@ src/App.config
 src/*.resx
 src/MarkTracker.csproj
 src/MarkTracker.sln
+
+# Packages and dependencies
+src/packages/
+
+# Testing
+testing/

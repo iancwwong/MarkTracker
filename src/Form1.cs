@@ -19,8 +19,18 @@ namespace MarkTracker {
          * ATTRIBUTES
          * -----------------------------------
          */
-        private AssessmentPanelNode curAPNode;         /* The node that is right-clicked on */
 
+        /* The node that is right-clicked on from the assessment panel */
+        private UITreeViewNode curAPNode;
+
+        /* The node that is right-clicked on from the assessment panel */
+        private UITreeViewNode curPPNode;
+
+        /**
+         * -----------------------------------
+         * METHODS
+         * -----------------------------------
+         */
         public markTrackerForm() {
             InitializeComponent();
 
@@ -53,7 +63,7 @@ namespace MarkTracker {
         private void getAPNodeFromClick(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) {
                 // Select the clicked node
-                this.curAPNode = assessmentPanel.GetNodeAt(e.X, e.Y) as AssessmentPanelNode;
+                this.curAPNode = assessmentPanel.GetNodeAt(e.X, e.Y) as UITreeViewNode;
             }
         }
 
@@ -72,7 +82,7 @@ namespace MarkTracker {
                 }
 
                 /* Update the name of the node in UI and DB */
-                AssessmentPanelNode apNode = e.Node as AssessmentPanelNode;
+                UITreeViewNode apNode = e.Node as UITreeViewNode;
                 apNode.Text = e.Label.ToString();
                 // this.db.updateName(apNode.type, apNode.id, apNode.text);
                 //System.Diagnostics.Debug.WriteLine("Changed name to: " + e.Label.ToString());

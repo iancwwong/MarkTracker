@@ -1,4 +1,5 @@
 ﻿using MarkTracker.include;
+using MarkTracker.include.entities;
 using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
 using System;
@@ -32,8 +33,8 @@ namespace MarkTracker {
 
             /* TODO: Update DB with the new course */
             // int result = this.db.addNewCourse(newCourseName);
-            AssessmentPanelNode newCourseNode =
-                new AssessmentPanelNode(AssessmentPanelNode.apNodeType.Course,
+            UITreeViewNode newCourseNode =
+                new UITreeViewNode(EntityConstants.EntityType.Course,
                                         newCourseName,   /* default name of new course */
                                         null,            /* courses have no parent nodes */
                                         this.apCourseContextMenu);
@@ -70,8 +71,8 @@ namespace MarkTracker {
 
                 /* TODO: Update DB with the new course */
                 // int result = this.db.addNewCourse(newCourseName);
-                AssessmentPanelNode newAssessmentNode =
-                    new AssessmentPanelNode(AssessmentPanelNode.apNodeType.Assessment,
+                UITreeViewNode newAssessmentNode =
+                    new UITreeViewNode(EntityConstants.EntityType.Assessment,
                                             newAssessmentName,   /* default name of new course */
                                             this.curAPNode,
                                             this.apAssessmentContextMenu);
@@ -87,7 +88,7 @@ namespace MarkTracker {
         private void apCourseCM_rename_Click(object sender, EventArgs e) {
             if (this.curAPNode != null) {
                 /* Get the course node object */
-                AssessmentPanelNode cn = this.curAPNode;
+                UITreeViewNode cn = this.curAPNode;
 
                 /* change the text value */
                 cn.BeginEdit();
@@ -139,8 +140,8 @@ namespace MarkTracker {
 
                 /* TODO: Update DB with the new course */
                 // int result = this.db.addNewCourse(newCourseName);
-                AssessmentPanelNode newComponentNode =
-                    new AssessmentPanelNode(AssessmentPanelNode.apNodeType.Component,
+                UITreeViewNode newComponentNode =
+                    new UITreeViewNode(EntityConstants.EntityType.Component,
                                             newComponentName,   /* default name of new course */
                                             this.curAPNode,
                                             this.apComponentContextMenu);
@@ -156,7 +157,7 @@ namespace MarkTracker {
         private void apAssessmentCM_rename_Click(object sender, EventArgs e) {
             if (this.curAPNode != null) {
                 /* Get the assessment node object */
-                AssessmentPanelNode cn = this.curAPNode;
+                UITreeViewNode cn = this.curAPNode;
 
                 /* change the text value */
                 cn.BeginEdit();
@@ -203,7 +204,7 @@ namespace MarkTracker {
                     // int result = this.db.deleteAssessment(this.curAPNode.id);
 
                     /* Remove this node from the parent course in UI */
-                    AssessmentPanelNode parentCourse = this.curAPNode.parentNode;
+                    UITreeViewNode parentCourse = this.curAPNode.parentNode;
                     parentCourse.Nodes.Remove(this.curAPNode);
 
                     /* Dereference current node */
