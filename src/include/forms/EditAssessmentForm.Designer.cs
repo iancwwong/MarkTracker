@@ -43,6 +43,7 @@
             // saveButton
             // 
             this.saveButton.Location = new System.Drawing.Point(90, 292);
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // cancelButton
             // 
