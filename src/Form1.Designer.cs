@@ -98,6 +98,7 @@
             // assessmentPanel
             // 
             this.assessmentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assessmentPanel.HideSelection = false;
             this.assessmentPanel.LabelEdit = true;
             this.assessmentPanel.Location = new System.Drawing.Point(3, 3);
             this.assessmentPanel.Name = "assessmentPanel";
@@ -110,6 +111,7 @@
             // participantPanel
             // 
             this.participantPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.participantPanel.HideSelection = false;
             this.participantPanel.LabelEdit = true;
             this.participantPanel.Location = new System.Drawing.Point(268, 3);
             this.participantPanel.Name = "participantPanel";
@@ -156,7 +158,7 @@
             // apCM_sort_name
             // 
             this.apCM_sort_name.Name = "apCM_sort_name";
-            this.apCM_sort_name.Size = new System.Drawing.Size(152, 22);
+            this.apCM_sort_name.Size = new System.Drawing.Size(106, 22);
             this.apCM_sort_name.Text = "Name";
             this.apCM_sort_name.Click += new System.EventHandler(this.apCM_sort_name_Click);
             // 
@@ -394,7 +396,7 @@
             // ppCM_new_group
             // 
             this.ppCM_new_group.Name = "ppCM_new_group";
-            this.ppCM_new_group.Size = new System.Drawing.Size(152, 22);
+            this.ppCM_new_group.Size = new System.Drawing.Size(107, 22);
             this.ppCM_new_group.Text = "Group";
             // 
             // toolStripSeparator8
