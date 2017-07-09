@@ -47,13 +47,7 @@ namespace MarkTracker {
          */
         private void apCM_sort_name_Click(object sender, EventArgs e) {
             /* Sort the courses by Name */
-        }
-
-        /**
-         * "Sort By -> Number of Participants"
-         */
-        private void apCM_sort_numParticipants_Click(object sender, EventArgs e) {
-            /* Sort the courses by number of participants */
+            this.assessmentPanel.Sort();
         }
 
 

@@ -34,7 +34,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.apCM_sort = new System.Windows.Forms.ToolStripMenuItem();
             this.apCM_sort_name = new System.Windows.Forms.ToolStripMenuItem();
-            this.apCM_sort_numParticipants = new System.Windows.Forms.ToolStripMenuItem();
             this.apCourseContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.apCourseCM_new = new System.Windows.Forms.ToolStripMenuItem();
             this.apCourseCM_new_assessment = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,9 +66,9 @@
             this.ppContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ppCM_new = new System.Windows.Forms.ToolStripMenuItem();
             this.ppCM_new_group = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.ppCM_sort = new System.Windows.Forms.ToolStripMenuItem();
             this.ppCM_sort_name = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.ppTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
@@ -149,8 +148,7 @@
             // apCM_sort
             // 
             this.apCM_sort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.apCM_sort_name,
-            this.apCM_sort_numParticipants});
+            this.apCM_sort_name});
             this.apCM_sort.Name = "apCM_sort";
             this.apCM_sort.Size = new System.Drawing.Size(111, 22);
             this.apCM_sort.Text = "Sort By";
@@ -158,16 +156,9 @@
             // apCM_sort_name
             // 
             this.apCM_sort_name.Name = "apCM_sort_name";
-            this.apCM_sort_name.Size = new System.Drawing.Size(197, 22);
+            this.apCM_sort_name.Size = new System.Drawing.Size(152, 22);
             this.apCM_sort_name.Text = "Name";
             this.apCM_sort_name.Click += new System.EventHandler(this.apCM_sort_name_Click);
-            // 
-            // apCM_sort_numParticipants
-            // 
-            this.apCM_sort_numParticipants.Name = "apCM_sort_numParticipants";
-            this.apCM_sort_numParticipants.Size = new System.Drawing.Size(197, 22);
-            this.apCM_sort_numParticipants.Text = "Number of participants";
-            this.apCM_sort_numParticipants.Click += new System.EventHandler(this.apCM_sort_numParticipants_Click);
             // 
             // apCourseContextMenu
             // 
@@ -403,8 +394,13 @@
             // ppCM_new_group
             // 
             this.ppCM_new_group.Name = "ppCM_new_group";
-            this.ppCM_new_group.Size = new System.Drawing.Size(107, 22);
+            this.ppCM_new_group.Size = new System.Drawing.Size(152, 22);
             this.ppCM_new_group.Text = "Group";
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(108, 6);
             // 
             // ppCM_sort
             // 
@@ -417,13 +413,8 @@
             // ppCM_sort_name
             // 
             this.ppCM_sort_name.Name = "ppCM_sort_name";
-            this.ppCM_sort_name.Size = new System.Drawing.Size(152, 22);
+            this.ppCM_sort_name.Size = new System.Drawing.Size(106, 22);
             this.ppCM_sort_name.Text = "Name";
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(108, 6);
             // 
             // ppTooltip
             // 
@@ -462,7 +453,6 @@
         private System.Windows.Forms.ToolStripMenuItem apCM_new_course;
         private System.Windows.Forms.ToolStripMenuItem apCM_sort;
         private System.Windows.Forms.ToolStripMenuItem apCM_sort_name;
-        private System.Windows.Forms.ToolStripMenuItem apCM_sort_numParticipants;
         private System.Windows.Forms.ContextMenuStrip apCourseContextMenu;
         private System.Windows.Forms.ToolStripMenuItem apCourseCM_new;
         private System.Windows.Forms.ToolStripMenuItem apCourseCM_new_assessment;
