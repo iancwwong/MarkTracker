@@ -253,13 +253,18 @@ namespace MarkTracker {
         /**
          * Edit the details of the selected component */
         private void apComponentCM_edit_Click(object sender, EventArgs e) {
-
+            if (this.curAPNode != null) {
+                /* Create and open the edit component form */
+                // Component c = this.db.getComponent(this.curAPNode.id);
+                EditComponentForm ecf = new EditComponentForm(null);
+                ecf.Show();
+            }
         }
 
         /**
          * View statistics of selected component */
         private void apComponentCM_view_statistics_Click(object sender, EventArgs e) {
-
+            /* TODO: Not implemented */
         }
 
         /**
