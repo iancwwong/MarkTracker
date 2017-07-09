@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MarkTracker.include {
-    /* Contains a bunch of constant messages for dialogue boxes */
+    /**
+     * Contains a bunch of constant messages for dialogue boxes 
+     */
     class DialogueMessages {
 
         /* Course related messages */
@@ -16,5 +18,12 @@ namespace MarkTracker.include {
 
         /* Course related message */
         public const string COMPONENT_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected component?";
+    }
+
+    /**
+     * Messages for tooltips
+     */
+    class TooltipMessages {
+        public const string ASSESSMENT_PANEL_INFO = "View and add courses or assessments here";
     }
 }

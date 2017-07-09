@@ -62,6 +62,7 @@
             this.apComponentCM_view_statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.apComponentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
+            this.apTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -291,39 +292,39 @@
             this.toolStripSeparator7,
             this.apComponentCM_delete});
             this.apComponentContextMenu.Name = "apComponentContextMenu";
-            this.apComponentContextMenu.Size = new System.Drawing.Size(153, 148);
+            this.apComponentContextMenu.Size = new System.Drawing.Size(118, 126);
             // 
             // apComponentCM_new
             // 
             this.apComponentCM_new.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.apComponentCM_new_component});
             this.apComponentCM_new.Name = "apComponentCM_new";
-            this.apComponentCM_new.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_new.Size = new System.Drawing.Size(117, 22);
             this.apComponentCM_new.Text = "New";
             // 
             // apComponentCM_new_component
             // 
             this.apComponentCM_new_component.Name = "apComponentCM_new_component";
-            this.apComponentCM_new_component.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_new_component.Size = new System.Drawing.Size(138, 22);
             this.apComponentCM_new_component.Text = "Component";
             this.apComponentCM_new_component.Click += new System.EventHandler(this.apComponentCM_new_component_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
             // 
             // apComponentCM_rename
             // 
             this.apComponentCM_rename.Name = "apComponentCM_rename";
-            this.apComponentCM_rename.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_rename.Size = new System.Drawing.Size(117, 22);
             this.apComponentCM_rename.Text = "Rename";
             this.apComponentCM_rename.Click += new System.EventHandler(this.apComponentCM_rename_Click);
             // 
             // apComponentCM_edit
             // 
             this.apComponentCM_edit.Name = "apComponentCM_edit";
-            this.apComponentCM_edit.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_edit.Size = new System.Drawing.Size(117, 22);
             this.apComponentCM_edit.Text = "Edit";
             this.apComponentCM_edit.Click += new System.EventHandler(this.apComponentCM_edit_Click);
             // 
@@ -332,27 +333,35 @@
             this.apComponentCM_view.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.apComponentCM_view_statistics});
             this.apComponentCM_view.Name = "apComponentCM_view";
-            this.apComponentCM_view.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_view.Size = new System.Drawing.Size(117, 22);
             this.apComponentCM_view.Text = "View";
             // 
             // apComponentCM_view_statistics
             // 
             this.apComponentCM_view_statistics.Name = "apComponentCM_view_statistics";
-            this.apComponentCM_view_statistics.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_view_statistics.Size = new System.Drawing.Size(120, 22);
             this.apComponentCM_view_statistics.Text = "Statistics";
             this.apComponentCM_view_statistics.Click += new System.EventHandler(this.apComponentCM_view_statistics_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(114, 6);
             // 
             // apComponentCM_delete
             // 
             this.apComponentCM_delete.Name = "apComponentCM_delete";
-            this.apComponentCM_delete.Size = new System.Drawing.Size(152, 22);
+            this.apComponentCM_delete.Size = new System.Drawing.Size(117, 22);
             this.apComponentCM_delete.Text = "Delete";
             this.apComponentCM_delete.Click += new System.EventHandler(this.apComponentCM_delete_Click);
+            // 
+            // apTooltip
+            // 
+            this.apTooltip.AutoPopDelay = 5000;
+            this.apTooltip.InitialDelay = 800;
+            this.apTooltip.ReshowDelay = 500;
+            this.apTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.apTooltip.ToolTipTitle = "Assessment Panel";
             // 
             // markTrackerForm
             // 
@@ -412,6 +421,7 @@
         private System.Windows.Forms.ToolStripMenuItem apComponentCM_delete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolTip apTooltip;
     }
 }
 

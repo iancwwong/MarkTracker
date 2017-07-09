@@ -37,6 +37,9 @@ namespace MarkTracker {
             /* Attach context menu strips (ie submenu from right clicks).
              * By default, it will show when the AP is right-clicked on*/
             this.assessmentPanel.ContextMenuStrip = this.apContextMenu;
+
+            /* Attach ap tooltip */
+            this.apTooltip.SetToolTip(this.assessmentPanel, TooltipMessages.ASSESSMENT_PANEL_INFO);
         }
 
         private void markTrackerForm_Load(object sender, EventArgs e) {
