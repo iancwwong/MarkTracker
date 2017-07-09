@@ -70,6 +70,7 @@
             this.ppCM_sort = new System.Windows.Forms.ToolStripMenuItem();
             this.ppCM_sort_name = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.ppTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -424,6 +425,14 @@
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(108, 6);
             // 
+            // ppTooltip
+            // 
+            this.ppTooltip.AutoPopDelay = 5000;
+            this.ppTooltip.InitialDelay = 800;
+            this.ppTooltip.ReshowDelay = 500;
+            this.ppTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ppTooltip.ToolTipTitle = "Participant Panel";
+            // 
             // markTrackerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -491,6 +500,7 @@
         private System.Windows.Forms.ToolStripMenuItem ppCM_sort;
         private System.Windows.Forms.ToolStripMenuItem ppCM_sort_name;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolTip ppTooltip;
     }
 }
 

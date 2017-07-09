@@ -43,6 +43,9 @@ namespace MarkTracker {
 
             /* Attach ap tooltip */
             this.apTooltip.SetToolTip(this.assessmentPanel, TooltipMessages.ASSESSMENT_PANEL_INFO);
+
+            /* Attach pp tooltip */
+            this.ppTooltip.SetToolTip(this.participantPanel, TooltipMessages.PARTICIPANT_PANEL_INFO);
         }
 
         private void markTrackerForm_Load(object sender, EventArgs e) {

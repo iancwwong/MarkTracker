@@ -25,5 +25,6 @@ namespace MarkTracker.include {
      */
     class TooltipMessages {
         public const string ASSESSMENT_PANEL_INFO = "View and add courses or assessments here";
+        public const string PARTICIPANT_PANEL_INFO = "View and add groups or students here";
     }
 }
