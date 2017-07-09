@@ -561,7 +561,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "markTrackerForm";
             this.Text = "MarkTracker";
-            this.Load += new System.EventHandler(this.markTrackerForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.apContextMenu.ResumeLayout(false);
             this.apCourseContextMenu.ResumeLayout(false);

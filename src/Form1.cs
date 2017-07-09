@@ -48,10 +48,6 @@ namespace MarkTracker {
             this.ppTooltip.SetToolTip(this.participantPanel, TooltipMessages.PARTICIPANT_PANEL_INFO);
         }
 
-        private void markTrackerForm_Load(object sender, EventArgs e) {
-            /* TODO: Read in the course and assessment nodes from data source */
-        }
-
         /**
          * -----------------------------------
          * GENERAL FORM HANDLERS
