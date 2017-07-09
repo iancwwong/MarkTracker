@@ -27,6 +27,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(markTrackerForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.assessmentPanel = new System.Windows.Forms.TreeView();
+            this.participantPanel = new System.Windows.Forms.TreeView();
             this.apContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.apCM_new = new System.Windows.Forms.ToolStripMenuItem();
             this.apCM_new_course = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,11 +64,18 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.apComponentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.apTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.ppContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ppCM_new = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppCM_new_group = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppCM_sort = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppCM_sort_name = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
             this.apAssessmentContextMenu.SuspendLayout();
             this.apComponentContextMenu.SuspendLayout();
+            this.ppContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -77,6 +85,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.Controls.Add(this.assessmentPanel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.participantPanel, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -95,7 +104,17 @@
             this.assessmentPanel.Size = new System.Drawing.Size(259, 505);
             this.assessmentPanel.TabIndex = 0;
             this.assessmentPanel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.afterAPLabelEdit_handler);
+            this.assessmentPanel.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.assessmentPanel_NodeMouseDoubleClick);
             this.assessmentPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.getAPNodeFromClick);
+            // 
+            // participantPanel
+            // 
+            this.participantPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.participantPanel.LabelEdit = true;
+            this.participantPanel.Location = new System.Drawing.Point(268, 3);
+            this.participantPanel.Name = "participantPanel";
+            this.participantPanel.Size = new System.Drawing.Size(259, 505);
+            this.participantPanel.TabIndex = 1;
             // 
             // apContextMenu
             // 
@@ -363,6 +382,48 @@
             this.apTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.apTooltip.ToolTipTitle = "Assessment Panel";
             // 
+            // ppContextMenu
+            // 
+            this.ppContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ppCM_new,
+            this.toolStripSeparator8,
+            this.ppCM_sort});
+            this.ppContextMenu.Name = "ppContextMenu";
+            this.ppContextMenu.Size = new System.Drawing.Size(112, 54);
+            // 
+            // ppCM_new
+            // 
+            this.ppCM_new.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ppCM_new_group});
+            this.ppCM_new.Name = "ppCM_new";
+            this.ppCM_new.Size = new System.Drawing.Size(111, 22);
+            this.ppCM_new.Text = "New";
+            // 
+            // ppCM_new_group
+            // 
+            this.ppCM_new_group.Name = "ppCM_new_group";
+            this.ppCM_new_group.Size = new System.Drawing.Size(107, 22);
+            this.ppCM_new_group.Text = "Group";
+            // 
+            // ppCM_sort
+            // 
+            this.ppCM_sort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ppCM_sort_name});
+            this.ppCM_sort.Name = "ppCM_sort";
+            this.ppCM_sort.Size = new System.Drawing.Size(111, 22);
+            this.ppCM_sort.Text = "Sort By";
+            // 
+            // ppCM_sort_name
+            // 
+            this.ppCM_sort_name.Name = "ppCM_sort_name";
+            this.ppCM_sort_name.Size = new System.Drawing.Size(152, 22);
+            this.ppCM_sort_name.Text = "Name";
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(108, 6);
+            // 
             // markTrackerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -378,6 +439,7 @@
             this.apCourseContextMenu.ResumeLayout(false);
             this.apAssessmentContextMenu.ResumeLayout(false);
             this.apComponentContextMenu.ResumeLayout(false);
+            this.ppContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -422,6 +484,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolTip apTooltip;
+        private System.Windows.Forms.TreeView participantPanel;
+        private System.Windows.Forms.ContextMenuStrip ppContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem ppCM_new;
+        private System.Windows.Forms.ToolStripMenuItem ppCM_new_group;
+        private System.Windows.Forms.ToolStripMenuItem ppCM_sort;
+        private System.Windows.Forms.ToolStripMenuItem ppCM_sort_name;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
     }
 }
 

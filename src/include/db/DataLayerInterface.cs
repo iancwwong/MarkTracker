@@ -100,6 +100,8 @@ namespace MarkTracker.include.db {
          */
         int updateName(EntityConstants.EntityType type, int id, string newName);
 
+        List<UITreeViewNode> getAllParticipantNodes(int courseID);
+
         #endregion
 
     }

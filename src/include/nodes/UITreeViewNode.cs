@@ -11,7 +11,7 @@ namespace MarkTracker.include.nodes {
 
         /* These two work together in order to obtain the reference from the data source */
         public EntityConstants.EntityType type { get; set; }
-        public uint id { get; set; }
+        public int id { get; set; }
 
         /* Parent node */
         public UITreeViewNode parentNode { get; set; }
@@ -21,6 +21,15 @@ namespace MarkTracker.include.nodes {
             this.type = eType;
             this.parentNode = parent;
             this.ContextMenuStrip = cms;
+        }
+
+        /* Obtain the reference of the absolute root node */
+        public UITreeViewNode getRootNode() {
+            UITreeViewNode curNode = this;
+            while (curNode.parentNode != null) {
+                curNode = curNode.parentNode;
+            }
+            return curNode;
         }
     }
 }
