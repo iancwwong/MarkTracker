@@ -20,7 +20,7 @@ namespace MarkTracker.include {
         public const string COMPONENT_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected component?";
 
         /* Group related messages */
-        public const string GROUP_REMOVE_CONFIRMATION = "Are you sure you want to remve the selected group?";
+        public const string GROUP_REMOVE_CONFIRMATION = "Are you sure you want to remove the selected group?";
 
     }
 

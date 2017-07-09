@@ -99,6 +99,7 @@ namespace MarkTracker {
         private void apCourseCM_edit_Click(object sender, EventArgs e) {
             if (this.curAPNode != null) {
                 /* Bring up edit course window */
+                // Course c = this.db.getCourse(this.curAPNode.id);
                 EditCourseForm ecf = new EditCourseForm(null);
                 ecf.Show();
             }

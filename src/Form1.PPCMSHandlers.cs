@@ -1,5 +1,6 @@
 ﻿using MarkTracker.include;
 using MarkTracker.include.entities;
+using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,21 @@ namespace MarkTracker {
          * New -> Student
          */
         private void ppGroupCM_new_student_Click(object sender, EventArgs e) {
+            if (this.curPPNode != null) {
+                /* Create a new student node for the associated group */
+                string newStudentName = "New Student";        /* default */
+
+                /* TODO: Update DB with the new student */
+                // int result = this.db.addNewStudent(...);
+                UITreeViewNode newStudentNode =
+                    new UITreeViewNode(EntityConstants.EntityType.Student,
+                                            newStudentName,   /* default name of new course */
+                                            this.curPPNode,
+                                            this.ppStudentContextMenu);
+                // newAssessmentNode.id = result
+                this.curPPNode.Nodes.Add(newStudentNode);
+                this.curPPNode.Expand();        /* Keep group node expanded */
+            }
 
         }
 
@@ -61,14 +77,14 @@ namespace MarkTracker {
          */
         private void ppGroupCM_rename_Click(object sender, EventArgs e) {   
             if (this.curPPNode != null) {
-                /* Get the course node object */
+                /* Get the group node object */
                 UITreeViewNode cn = this.curPPNode;
 
                 /* change the text value */
                 cn.BeginEdit();
 
                 /* NOTE: The update in the DB is handled by the 
-                 * afterAPLabelEdit_handler function
+                 * afterPPLabelEdit_handler function
                  */
             }
         }
@@ -77,7 +93,12 @@ namespace MarkTracker {
          * Edit group
          */
         private void ppGroupCM_edit_Click(object sender, EventArgs e) {
-
+            if (this.curPPNode != null) {
+                /* Bring up group edit window */
+                // Group g = this.db.getGroup(this.curPPNode.id);
+                EditGroupForm egf = new EditGroupForm(null);
+                egf.Show();
+            }
         }
 
         /**

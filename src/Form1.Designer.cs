@@ -78,7 +78,13 @@
             this.ppGroupCM_edit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.ppGroupCM_delete = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ppStudentContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ppStudentCM_addEditMark = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppStudentCM_rename = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppStudentCM_edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.ppStudentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -86,6 +92,7 @@
             this.apComponentContextMenu.SuspendLayout();
             this.ppContextMenu.SuspendLayout();
             this.ppGroupContextMenu.SuspendLayout();
+            this.ppStudentContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -463,7 +470,7 @@
             // ppGroupCM_new_student
             // 
             this.ppGroupCM_new_student.Name = "ppGroupCM_new_student";
-            this.ppGroupCM_new_student.Size = new System.Drawing.Size(115, 22);
+            this.ppGroupCM_new_student.Size = new System.Drawing.Size(152, 22);
             this.ppGroupCM_new_student.Text = "Student";
             this.ppGroupCM_new_student.Click += new System.EventHandler(this.ppGroupCM_new_student_Click);
             // 
@@ -498,10 +505,52 @@
             this.ppGroupCM_delete.Text = "Delete";
             this.ppGroupCM_delete.Click += new System.EventHandler(this.ppGroupCM_delete_Click);
             // 
-            // contextMenuStrip1
+            // ppStudentContextMenu
             // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            this.ppStudentContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ppStudentCM_addEditMark,
+            this.toolStripSeparator11,
+            this.ppStudentCM_rename,
+            this.ppStudentCM_edit,
+            this.toolStripSeparator12,
+            this.ppStudentCM_delete});
+            this.ppStudentContextMenu.Name = "ppStudentContextMenu";
+            this.ppStudentContextMenu.Size = new System.Drawing.Size(161, 104);
+            // 
+            // ppStudentCM_addEditMark
+            // 
+            this.ppStudentCM_addEditMark.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.ppStudentCM_addEditMark.Name = "ppStudentCM_addEditMark";
+            this.ppStudentCM_addEditMark.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_addEditMark.Text = "Add / Edit Mark";
+            // 
+            // ppStudentCM_rename
+            // 
+            this.ppStudentCM_rename.Name = "ppStudentCM_rename";
+            this.ppStudentCM_rename.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_rename.Text = "Rename";
+            // 
+            // ppStudentCM_edit
+            // 
+            this.ppStudentCM_edit.Name = "ppStudentCM_edit";
+            this.ppStudentCM_edit.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_edit.Text = "Edit";
+            // 
+            // ppStudentCM_delete
+            // 
+            this.ppStudentCM_delete.Name = "ppStudentCM_delete";
+            this.ppStudentCM_delete.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_delete.Text = "Delete";
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(157, 6);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(157, 6);
             // 
             // markTrackerForm
             // 
@@ -520,6 +569,7 @@
             this.apComponentContextMenu.ResumeLayout(false);
             this.ppContextMenu.ResumeLayout(false);
             this.ppGroupContextMenu.ResumeLayout(false);
+            this.ppStudentContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -579,7 +629,13 @@
         private System.Windows.Forms.ToolStripMenuItem ppGroupCM_edit;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem ppGroupCM_delete;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip ppStudentContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem ppStudentCM_addEditMark;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripMenuItem ppStudentCM_rename;
+        private System.Windows.Forms.ToolStripMenuItem ppStudentCM_edit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripMenuItem ppStudentCM_delete;
     }
 }
 

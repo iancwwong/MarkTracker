@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace MarkTracker.include.entities {
 
     /**
-     * Represents a course
+     * Represents a group
      */
-    public class Course {
+    public class Group {
         public string name { get; set; }
         public int id { get; set; }
 
         /* Constructor */
-        public Course() { }
+        public Group() {}
     }
 }
