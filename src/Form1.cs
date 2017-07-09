@@ -59,7 +59,7 @@ namespace MarkTracker {
          */
         #region General Form Handlers
 
-        /**curAPNode
+        /**
         * -----------------------------------
         * ASSESSMENT PANEL (TREE VIEW)
         * -----------------------------------
@@ -123,6 +123,9 @@ namespace MarkTracker {
                 /* Collapse all for better UI aesthetics */
                 this.participantPanel.CollapseAll();
             }
+
+            /* Keep the double-clicked node expanded */
+            this.curAPNode.Expand();
 
         }
 
