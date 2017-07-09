@@ -27,7 +27,7 @@ namespace MarkTracker {
         private UITreeViewNode curAPNode;
 
         /* The node that is right-clicked on from the assessment panel */
-        // private UITreeViewNode curPPNode;
+        private UITreeViewNode curPPNode;
 
         /**
          * -----------------------------------
@@ -127,6 +127,47 @@ namespace MarkTracker {
             /* Keep the double-clicked node expanded */
             this.curAPNode.Expand();
 
+        }
+
+        #endregion
+
+        /**
+       * -----------------------------------
+       * PARTICIPANT PANEL (TREE VIEW)
+       * -----------------------------------
+       */
+        #region Participant Panel handlers
+
+        /** 
+         * Updates the reference participant node that was
+         * clicked on
+         */
+        private void getPPNodeFromClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) {
+                // Select the clicked node
+                this.curPPNode = this.participantPanel.GetNodeAt(e.X, e.Y) as UITreeViewNode;
+            }
+        }
+
+        /**
+         * Handler for when the label for a PPNode is changed
+         */
+        private void participantPanel_AfterLabelEdit(object sender, NodeLabelEditEventArgs e) {
+            if (e.Label != null) {
+                /* New name should have a length > 0 */
+                if (e.Label.Length == 0) {
+                    /* Prompt user to re-enter a new name */
+                    e.CancelEdit = true;
+                    MessageBox.Show("New name cannot be blank");
+                    e.Node.BeginEdit();
+                }
+
+                /* Update the name of the node in UI and DB */
+                UITreeViewNode ppNode = e.Node as UITreeViewNode;
+                ppNode.Text = e.Label.ToString();
+                // this.db.updateName(ppNode.type, ppNode.id, ppNode.text);
+                //System.Diagnostics.Debug.WriteLine("PPNode Changed name to: " + e.Label.ToString());
+            }
         }
 
         #endregion

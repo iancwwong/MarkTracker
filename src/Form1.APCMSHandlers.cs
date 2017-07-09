@@ -117,6 +117,7 @@ namespace MarkTracker {
 
                 this.assessmentPanel.Nodes.Remove(this.curAPNode);
                 this.curAPNode = null;
+
             }
         }
 
