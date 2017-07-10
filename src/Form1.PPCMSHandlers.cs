@@ -145,8 +145,8 @@ namespace MarkTracker {
                     // int studID = this.curPPNode.id;
                     // int componentID = this.curAPNode.id;
                     // StudentMark sm = this.db.getStudentMark(studID, componentID);
-                    //EditMarkForm emf = new EditMarkForm(null);
-                    //emf.Show();
+                    EditStudentMarkForm emf = new EditStudentMarkForm(null);
+                    emf.Show();
                 }
 
             }

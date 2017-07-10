@@ -14,10 +14,11 @@ namespace MarkTracker.include.forms {
         private Group group;
         
         /* Constructor */
-        public EditGroupForm(Group c) {
+        public EditGroupForm(Group g) {
             InitializeComponent();
 
             /* TODO: Populate UI components with the group attribute */
+            this.group = g;
         }
     }
 }
