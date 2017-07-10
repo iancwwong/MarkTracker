@@ -31,5 +31,10 @@ namespace MarkTracker.include.nodes {
             }
             return curNode;
         }
+
+        /* Check if this node is a leaf node */
+        public bool isLeaf() {
+            return (this.Nodes.Count == 0);
+        }
     }
 }

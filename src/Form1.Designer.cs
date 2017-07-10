@@ -80,11 +80,11 @@
             this.ppGroupCM_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.ppStudentContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ppStudentCM_addEditMark = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.ppStudentCM_rename = new System.Windows.Forms.ToolStripMenuItem();
             this.ppStudentCM_edit = new System.Windows.Forms.ToolStripMenuItem();
-            this.ppStudentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.ppStudentCM_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.apContextMenu.SuspendLayout();
             this.apCourseContextMenu.SuspendLayout();
@@ -470,7 +470,7 @@
             // ppGroupCM_new_student
             // 
             this.ppGroupCM_new_student.Name = "ppGroupCM_new_student";
-            this.ppGroupCM_new_student.Size = new System.Drawing.Size(152, 22);
+            this.ppGroupCM_new_student.Size = new System.Drawing.Size(115, 22);
             this.ppGroupCM_new_student.Text = "Student";
             this.ppGroupCM_new_student.Click += new System.EventHandler(this.ppGroupCM_new_student_Click);
             // 
@@ -515,7 +515,7 @@
             this.toolStripSeparator12,
             this.ppStudentCM_delete});
             this.ppStudentContextMenu.Name = "ppStudentContextMenu";
-            this.ppStudentContextMenu.Size = new System.Drawing.Size(161, 104);
+            this.ppStudentContextMenu.Size = new System.Drawing.Size(161, 126);
             // 
             // ppStudentCM_addEditMark
             // 
@@ -523,34 +523,38 @@
             this.ppStudentCM_addEditMark.Name = "ppStudentCM_addEditMark";
             this.ppStudentCM_addEditMark.Size = new System.Drawing.Size(160, 22);
             this.ppStudentCM_addEditMark.Text = "Add / Edit Mark";
-            // 
-            // ppStudentCM_rename
-            // 
-            this.ppStudentCM_rename.Name = "ppStudentCM_rename";
-            this.ppStudentCM_rename.Size = new System.Drawing.Size(160, 22);
-            this.ppStudentCM_rename.Text = "Rename";
-            // 
-            // ppStudentCM_edit
-            // 
-            this.ppStudentCM_edit.Name = "ppStudentCM_edit";
-            this.ppStudentCM_edit.Size = new System.Drawing.Size(160, 22);
-            this.ppStudentCM_edit.Text = "Edit";
-            // 
-            // ppStudentCM_delete
-            // 
-            this.ppStudentCM_delete.Name = "ppStudentCM_delete";
-            this.ppStudentCM_delete.Size = new System.Drawing.Size(160, 22);
-            this.ppStudentCM_delete.Text = "Delete";
+            this.ppStudentCM_addEditMark.Click += new System.EventHandler(this.ppStudentCM_addEditMark_Click);
             // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
             this.toolStripSeparator11.Size = new System.Drawing.Size(157, 6);
             // 
+            // ppStudentCM_rename
+            // 
+            this.ppStudentCM_rename.Name = "ppStudentCM_rename";
+            this.ppStudentCM_rename.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_rename.Text = "Rename";
+            this.ppStudentCM_rename.Click += new System.EventHandler(this.ppStudentCM_rename_Click);
+            // 
+            // ppStudentCM_edit
+            // 
+            this.ppStudentCM_edit.Name = "ppStudentCM_edit";
+            this.ppStudentCM_edit.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_edit.Text = "Edit";
+            this.ppStudentCM_edit.Click += new System.EventHandler(this.ppStudentCM_edit_Click);
+            // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
             this.toolStripSeparator12.Size = new System.Drawing.Size(157, 6);
+            // 
+            // ppStudentCM_delete
+            // 
+            this.ppStudentCM_delete.Name = "ppStudentCM_delete";
+            this.ppStudentCM_delete.Size = new System.Drawing.Size(160, 22);
+            this.ppStudentCM_delete.Text = "Delete";
+            this.ppStudentCM_delete.Click += new System.EventHandler(this.ppStudentCM_delete_Click);
             // 
             // markTrackerForm
             // 

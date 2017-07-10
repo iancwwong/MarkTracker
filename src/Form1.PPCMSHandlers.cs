@@ -120,5 +120,88 @@ namespace MarkTracker {
 
         #endregion
 
+        #region Right-click on student
+
+        /**
+         * Add or edit mark for selected component associated with selected student
+         */ 
+        private void ppStudentCM_addEditMark_Click(object sender, EventArgs e) {
+            /* Check to see if a leaf assessment component is selected */
+            if (this.curAPNode != null) {
+
+                /* A component was not selected */
+                if (this.curAPNode.type != EntityConstants.EntityType.Component) {
+                    MessageBox.Show(ErrorMessages.COMPONENT_NOT_SELECTED);
+                }
+
+                /* Leaf component wasn't selected */
+                else if (!this.curAPNode.isLeaf()) {
+                    MessageBox.Show(ErrorMessages.LEAF_COMPONENT_NOT_SELECTED);
+                }
+
+                /* all is good */
+                else {
+                    /* Try to obtain the mark of the selected student and component */
+                    // int studID = this.curPPNode.id;
+                    // int componentID = this.curAPNode.id;
+                    // StudentMark sm = this.db.getStudentMark(studID, componentID);
+                    //EditMarkForm emf = new EditMarkForm(null);
+                    //emf.Show();
+                }
+
+            }
+
+            /* No assessment panel node was selected
+            * SHOULD NOT REACH HERE */
+        }
+
+        /**
+         * Rename the student
+         */
+        private void ppStudentCM_rename_Click(object sender, EventArgs e) {
+            if (this.curPPNode != null) {
+                /* Get the student node object */
+                UITreeViewNode cn = this.curPPNode;
+
+                /* change the text value */
+                cn.BeginEdit();
+
+                /* NOTE: The update in the DB is handled by the 
+                 * afterPPLabelEdit_handler function
+                 */
+            }
+        }
+
+        /**
+         * Edit the student information
+         */
+        private void ppStudentCM_edit_Click(object sender, EventArgs e) {
+            if (this.curPPNode != null) {
+                /* Obtain the student object */
+                // Student s = this.db.getStudent(this.curPPNode.id);
+                EditStudentForm esf = new EditStudentForm(null);
+                esf.Show();
+            }
+        }
+
+
+        /**
+         * Remove the selected student
+         */
+        private void ppStudentCM_delete_Click(object sender, EventArgs e) {
+            /* Prompt user to confirm */
+            if (MessageBox.Show(DialogueMessages.GROUP_REMOVE_CONFIRMATION, "", MessageBoxButtons.OKCancel)
+                == DialogResult.OK) {
+
+                /* Reflect change in DB */
+                // int result = this.db.deleteGroup(this.curPPNode.id);
+
+                this.participantPanel.Nodes.Remove(this.curPPNode);
+                this.curPPNode = null;
+            }
+        }
+
+        #endregion
+
     }
 }

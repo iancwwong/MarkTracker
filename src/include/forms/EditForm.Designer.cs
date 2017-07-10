@@ -55,6 +55,7 @@
             this.ClientSize = new System.Drawing.Size(284, 253);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "EditForm";
             this.ShowIcon = false;
             this.Text = "Base Edit Form";

@@ -31,4 +31,12 @@ namespace MarkTracker.include {
         public const string ASSESSMENT_PANEL_INFO = "View and add courses or assessments here";
         public const string PARTICIPANT_PANEL_INFO = "View and add groups or students here";
     }
+
+    /**
+     * Error messages
+     */
+     class ErrorMessages {
+        public const string COMPONENT_NOT_SELECTED = "Please select an assessment component";
+        public const string LEAF_COMPONENT_NOT_SELECTED = "Please select a low-level component";
+    }
 }
