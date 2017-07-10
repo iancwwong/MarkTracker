@@ -515,7 +515,7 @@
             this.toolStripSeparator12,
             this.ppStudentCM_delete});
             this.ppStudentContextMenu.Name = "ppStudentContextMenu";
-            this.ppStudentContextMenu.Size = new System.Drawing.Size(161, 126);
+            this.ppStudentContextMenu.Size = new System.Drawing.Size(161, 104);
             // 
             // ppStudentCM_addEditMark
             // 
@@ -565,6 +565,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "markTrackerForm";
             this.Text = "MarkTracker";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.markTrackerForm_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.apContextMenu.ResumeLayout(false);
             this.apCourseContextMenu.ResumeLayout(false);

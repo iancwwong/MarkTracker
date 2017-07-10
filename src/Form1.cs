@@ -29,6 +29,9 @@ namespace MarkTracker {
         /* The node that is right-clicked on from the assessment panel */
         private UITreeViewNode curPPNode;
 
+        /* Data layer handler */
+        // private DataLayer db = null;
+
         /**
          * -----------------------------------
          * METHODS
@@ -36,6 +39,21 @@ namespace MarkTracker {
          */
         public markTrackerForm() {
             InitializeComponent();
+            
+            /* Attach UI components together */
+            HookUIComponents();
+
+            /* Initialise database connection */
+            InitialiseDataConnection();
+
+            /* Load the course and assessment data */
+            LoadAPContent();
+        }
+
+        /**
+         * Attaches various UI components together
+         */
+        private void HookUIComponents() {
 
             /* Attach context menu strips (ie submenu from right clicks).
              * By default, it will show when the AP is right-clicked on*/
@@ -49,11 +67,49 @@ namespace MarkTracker {
         }
 
         /**
+         * Opens connection to data source
+         */
+        private void InitialiseDataConnection() {
+            
+            //this.db = new DataLayer();
+
+            ///* Create a new database if none exists */
+            //string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
+            //if (!this.db.dbExists(dbName)) {
+            //    this.db.createDB(dbName);
+            //}
+
+            ///* Open data source connection */
+            //this.db.openDB(dbName);
+        }
+
+        /**
+         * Load course and assessment data from data source,
+         * and populate the assessment panel treeview with
+         * appropriate nodes
+         */
+        private void LoadAPContent() {
+            //List<UITreeViewNode> allAPNodes = this.db.getAllAPNodes();
+            //this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
+        }
+
+        /**
          * -----------------------------------
          * GENERAL FORM HANDLERS
          * -----------------------------------
          */
         #region General Form Handlers
+
+        /**
+         * When the user closes the form
+         */
+        private void markTrackerForm_FormClosing(object sender, FormClosingEventArgs e) {
+            /* Close data source handler */
+            // this.db.closeDB();
+        }
+
+        #endregion
+
 
         /**
         * -----------------------------------
@@ -168,6 +224,5 @@ namespace MarkTracker {
 
         #endregion
 
-        #endregion
     }
 }

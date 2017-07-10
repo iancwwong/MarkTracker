@@ -29,7 +29,7 @@ namespace MarkTracker {
             string newGroupName = "New Group";        /* default */
 
             /* TODO: Update DB with the new group */
-            // int result = this.db.addNewGroup(newGroupName);
+            // int result = this.db.addNewGroup(newGroupName, this.curSelCourseID)
             UITreeViewNode newGroupNode =
                 new UITreeViewNode(EntityConstants.EntityType.Group,
                                         newGroupName,   
@@ -95,7 +95,7 @@ namespace MarkTracker {
         private void ppGroupCM_edit_Click(object sender, EventArgs e) {
             if (this.curPPNode != null) {
                 /* Bring up group edit window */
-                // Group g = this.db.getGroup(this.curPPNode.id);
+                // Group g = this.db.getGroupObj(this.curPPNode.id);
                 EditGroupForm egf = new EditGroupForm(null);
                 egf.Show();
             }
@@ -178,7 +178,7 @@ namespace MarkTracker {
         private void ppStudentCM_edit_Click(object sender, EventArgs e) {
             if (this.curPPNode != null) {
                 /* Obtain the student object */
-                // Student s = this.db.getStudent(this.curPPNode.id);
+                // Student s = this.db.getStudentObj(this.curPPNode.id);
                 EditStudentForm esf = new EditStudentForm(null);
                 esf.Show();
             }
@@ -194,7 +194,7 @@ namespace MarkTracker {
                 == DialogResult.OK) {
 
                 /* Reflect change in DB */
-                // int result = this.db.deleteStudent(this.curPPNode.id);
+                // int result = this.db.deleteStudent(this.curPPNode.id, this.curSelCourseID);
 
                 /* Remove this node from the parent group in UI */
                 UITreeViewNode parentGroup = this.curPPNode.parentNode;

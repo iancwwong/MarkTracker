@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkTracker.include.entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,10 +11,10 @@ namespace MarkTracker.include.forms {
     public partial class EditComponentForm : MarkTracker.include.forms.EditForm {
 
         /* Component attribute */
-        private Component component;
+        private AssessmentComponent component;
 
         /* Constructor */
-        public EditComponentForm(Component c) {
+        public EditComponentForm(AssessmentComponent c) {
             InitializeComponent();
             this.component = c;
 

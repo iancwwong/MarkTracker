@@ -64,7 +64,7 @@ namespace MarkTracker {
                 string newAssessmentName = "New Assessment";        /* default */
 
                 /* TODO: Update DB with the new course */
-                // int result = this.db.addNewCourse(newCourseName);
+                // int result = this.db.addNewAssessment(newAssessmentName, this.curAPNode.id);
                 UITreeViewNode newAssessmentNode =
                     new UITreeViewNode(EntityConstants.EntityType.Assessment,
                                             newAssessmentName,   /* default name of new course */
@@ -99,7 +99,7 @@ namespace MarkTracker {
         private void apCourseCM_edit_Click(object sender, EventArgs e) {
             if (this.curAPNode != null) {
                 /* Bring up edit course window */
-                // Course c = this.db.getCourse(this.curAPNode.id);
+                // Course c = this.db.getCourseObj(this.curAPNode.id);
                 EditCourseForm ecf = new EditCourseForm(null);
                 ecf.Show();
             }
@@ -170,7 +170,7 @@ namespace MarkTracker {
         private void apAssessmentCM_edit_Click(object sender, EventArgs e) {
 
             /* Create the assessment edit form */
-            //Assessment assessment = this.db.getAssessment(this.curAPNode.id);
+            //Assessment assessment = this.db.getAssessmentObj(this.curAPNode.id);
             EditAssessmentForm eaf = new EditAssessmentForm(null);
             eaf.Show();
 
@@ -251,7 +251,7 @@ namespace MarkTracker {
         private void apComponentCM_edit_Click(object sender, EventArgs e) {
             if (this.curAPNode != null) {
                 /* Create and open the edit component form */
-                // Component c = this.db.getComponent(this.curAPNode.id);
+                // AssessmentComponent c = this.db.getComponentObj(this.curAPNode.id);
                 EditComponentForm ecf = new EditComponentForm(null);
                 ecf.Show();
             }
