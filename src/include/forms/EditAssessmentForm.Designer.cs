@@ -42,12 +42,12 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(90, 292);
+            this.saveButton.Location = new System.Drawing.Point(130, 299);
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(171, 292);
+            this.cancelButton.Location = new System.Drawing.Point(211, 299);
             // 
             // nameEditBox
             // 
@@ -56,7 +56,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nameEditBox.Location = new System.Drawing.Point(124, 32);
             this.nameEditBox.Name = "nameEditBox";
-            this.nameEditBox.Size = new System.Drawing.Size(178, 20);
+            this.nameEditBox.Size = new System.Drawing.Size(258, 20);
             this.nameEditBox.TabIndex = 14;
             // 
             // nameLabel
@@ -170,7 +170,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commentsEditBox.Location = new System.Drawing.Point(124, 162);
             this.commentsEditBox.Name = "commentsEditBox";
-            this.commentsEditBox.Size = new System.Drawing.Size(178, 108);
+            this.commentsEditBox.Size = new System.Drawing.Size(258, 115);
             this.commentsEditBox.TabIndex = 22;
             this.commentsEditBox.Text = "";
             this.commentsEditBox.WordWrap = false;
@@ -202,7 +202,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.percentageLabel.AutoSize = true;
-            this.percentageLabel.Location = new System.Drawing.Point(193, 139);
+            this.percentageLabel.Location = new System.Drawing.Point(183, 140);
             this.percentageLabel.Name = "percentageLabel";
             this.percentageLabel.Size = new System.Drawing.Size(15, 13);
             this.percentageLabel.TabIndex = 25;
@@ -211,7 +211,7 @@
             // EditAssessmentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(335, 331);
+            this.ClientSize = new System.Drawing.Size(415, 338);
             this.Controls.Add(this.percentageLabel);
             this.Controls.Add(this.dueTimePicker);
             this.Controls.Add(this.dueTimeLabel);
@@ -225,7 +225,7 @@
             this.Controls.Add(this.commentsLabel);
             this.Controls.Add(this.nameEditBox);
             this.Controls.Add(this.nameLabel);
-            this.MinimumSize = new System.Drawing.Size(351, 370);
+            this.MinimumSize = new System.Drawing.Size(431, 377);
             this.Name = "EditAssessmentForm";
             this.Text = "Edit Assessment";
             this.Controls.SetChildIndex(this.saveButton, 0);

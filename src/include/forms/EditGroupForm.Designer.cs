@@ -63,6 +63,7 @@
             this.ClientSize = new System.Drawing.Size(284, 123);
             this.Controls.Add(this.nameEditBox);
             this.Controls.Add(this.nameLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MinimumSize = new System.Drawing.Size(300, 162);
             this.Name = "EditGroupForm";
             this.Text = "Edit Group";

@@ -190,13 +190,17 @@ namespace MarkTracker {
          */
         private void ppStudentCM_delete_Click(object sender, EventArgs e) {
             /* Prompt user to confirm */
-            if (MessageBox.Show(DialogueMessages.GROUP_REMOVE_CONFIRMATION, "", MessageBoxButtons.OKCancel)
+            if (MessageBox.Show(DialogueMessages.STUDENT_REMOVE_CONFIRMATION, "", MessageBoxButtons.OKCancel)
                 == DialogResult.OK) {
 
                 /* Reflect change in DB */
-                // int result = this.db.deleteGroup(this.curPPNode.id);
+                // int result = this.db.deleteStudent(this.curPPNode.id);
 
-                this.participantPanel.Nodes.Remove(this.curPPNode);
+                /* Remove this node from the parent group in UI */
+                UITreeViewNode parentGroup = this.curPPNode.parentNode;
+                parentGroup.Nodes.Remove(this.curPPNode);
+
+                /* Dereference current node */
                 this.curPPNode = null;
             }
         }
