@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MarkTracker.include.nodes {
-    class UITreeViewNode : TreeNode {
+    public class UITreeViewNode : TreeNode {
 
         /* These two work together in order to obtain the reference from the data source */
         public EntityConstants.EntityType type { get; set; }

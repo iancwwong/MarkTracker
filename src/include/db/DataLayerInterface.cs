@@ -15,7 +15,7 @@ namespace MarkTracker.include.db {
      * This class is also responsible for the conversion between 
      * objects and relations (to and from data source)
      */
-    interface DataLayerInterface {
+    public interface DataLayerInterface {
 
         /*
             NOTE: By convention, data layer operations that are carried

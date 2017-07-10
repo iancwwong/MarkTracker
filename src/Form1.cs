@@ -1,4 +1,5 @@
 ﻿using MarkTracker.include;
+using MarkTracker.include.db;
 using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
 using System;
@@ -30,7 +31,7 @@ namespace MarkTracker {
         private UITreeViewNode curPPNode;
 
         /* Data layer handler */
-        // private DataLayer db = null;
+        private DataLayer db = null;
 
         /**
          * -----------------------------------
@@ -70,17 +71,17 @@ namespace MarkTracker {
          * Opens connection to data source
          */
         private void InitialiseDataConnection() {
-            
-            //this.db = new DataLayer();
 
-            ///* Create a new database if none exists */
-            //string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
-            //if (!this.db.dbExists(dbName)) {
-            //    this.db.createDB(dbName);
-            //}
+            this.db = new DataLayer();
 
-            ///* Open data source connection */
-            //this.db.openDB(dbName);
+            /* Create a new database if none exists */
+            string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
+            if (!this.db.dbExists(dbName)) {
+                this.db.createDB(dbName);
+            }
+
+            /* Open data source connection */
+            this.db.openDB(dbName);
         }
 
         /**
@@ -89,8 +90,8 @@ namespace MarkTracker {
          * appropriate nodes
          */
         private void LoadAPContent() {
-            //List<UITreeViewNode> allAPNodes = this.db.getAllAPNodes();
-            //this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
+            List<UITreeViewNode> allAPNodes = this.db.getAllAPNodes();
+            this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
         }
 
         /**
@@ -105,7 +106,7 @@ namespace MarkTracker {
          */
         private void markTrackerForm_FormClosing(object sender, FormClosingEventArgs e) {
             /* Close data source handler */
-            // this.db.closeDB();
+            this.db.closeDB();
         }
 
         #endregion
