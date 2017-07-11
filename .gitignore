@@ -17,6 +17,3 @@ src/MarkTracker.sln
 
 # Packages and dependencies
 src/packages/
-
-# Testing
-testing/

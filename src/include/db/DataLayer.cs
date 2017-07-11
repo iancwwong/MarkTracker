@@ -2,9 +2,11 @@
 using MarkTracker.include.nodes;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MarkTracker.include.db.DataLayerConstants;
 
 namespace MarkTracker.include.db {
 
@@ -13,6 +15,15 @@ namespace MarkTracker.include.db {
      */
     //public class DataLayer : DataLayerInterface {
     public class DataLayer : DataLayerInterface {
+
+        /* Database connection handler */
+        private SQLiteConnection dbConn = null;
+
+        /* Name of currently opened database */
+        private string curDBName = "";
+
+        /* Constructor */
+        public DataLayer() { }
 
         /**
          * ------------------------------------
@@ -24,15 +35,15 @@ namespace MarkTracker.include.db {
         /**
          * Creates the database / data file
          */
-        public int createDB(string dbName) {
-            return -1;
+        public ErrorCode createDB(string dbName) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
          * Removes a data source
          */
-        public int removeDB(string dbName) {
-            return -1;
+        public ErrorCode removeDB(string dbName) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -45,15 +56,22 @@ namespace MarkTracker.include.db {
         /**
          * Open the data source
          */
-        public int openDB(string dbName) {
-            return -1;
+        public ErrorCode openDB(string dbName) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
          * Close the currently opened data source
          */
-        public int closeDB() {
-            return -1;
+        public ErrorCode closeDB() {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        }
+
+        /**
+         * Checks if db is currently connected
+         */
+        public bool hasConnection() {
+            return false;
         }
 
         #endregion
@@ -68,8 +86,8 @@ namespace MarkTracker.include.db {
         /**
          * Adds a new course into the DB with the specified name
          */
-        public int addNewCourse(string newCourseName) {
-            return -1;
+        public ErrorCode addNewCourse(string newCourseName) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -82,8 +100,8 @@ namespace MarkTracker.include.db {
         /**
          * Removes a course from the DB with the specified ID
          */
-        public int deleteCourse(int courseID) {
-            return -1;
+        public ErrorCode deleteCourse(int courseID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -98,8 +116,8 @@ namespace MarkTracker.include.db {
         /**
         * Adds a new assessment into the DB with the specified name
         */
-        public int addNewAssessment(string newAssessmentName, int courseID) {
-            return -1;
+        public ErrorCode addNewAssessment(string newAssessmentName, int courseID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -112,8 +130,8 @@ namespace MarkTracker.include.db {
         /**
          * Removes an assessmente from the DB with the specified ID
          */
-        public int deleteAssessment(int assessmentID) {
-            return -1;
+        public ErrorCode deleteAssessment(int assessmentID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -130,10 +148,10 @@ namespace MarkTracker.include.db {
          * "parentComponentID":         null when creating a root component
          * "associatedAssessmentID":    null when creating a child component
          */
-        public int addNewComponent(string newComponentName,
+        public ErrorCode addNewComponent(string newComponentName,
                             Nullable<int> parentComponentID,
                             Nullable<int> associatedAssessmentID) {
-            return -1;
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -146,8 +164,8 @@ namespace MarkTracker.include.db {
         /**
          * Removes a component from the DB with the specified ID
          */
-        public int deleteComponent(int componentID) {
-            return -1;
+        public ErrorCode deleteComponent(int componentID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -163,8 +181,8 @@ namespace MarkTracker.include.db {
         * Adds a new group into the DB with the specified name
         * and associated course
         */
-        public int addNewGroup(string newGroupName, int associatedCourse) {
-            return -1;
+        public ErrorCode addNewGroup(string newGroupName, int associatedCourse) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -177,8 +195,8 @@ namespace MarkTracker.include.db {
         /**
          * Removes a group from the DB with the specified ID
          */
-        public int deleteGroup(int groupID) {
-            return -1;
+        public ErrorCode deleteGroup(int groupID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -194,8 +212,8 @@ namespace MarkTracker.include.db {
         * Adds a new student into the DB with the specified name
         * and associated group id
         */
-        public int addNewStudent(string newStudentName, int groupID) {
-            return -1;
+        public ErrorCode addNewStudent(string newStudentName, int groupID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**
@@ -209,8 +227,8 @@ namespace MarkTracker.include.db {
          * Removes a student from the DB with the specified ID
          * and course ID
          */
-        public int deleteStudent(int studentID, int courseID) {
-            return -1;
+        public ErrorCode deleteStudent(int studentID, int courseID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -223,6 +241,13 @@ namespace MarkTracker.include.db {
         #region Student Mark Info Management Functions
 
         /**
+         * Create a new student mark record
+         */
+        public ErrorCode addNewStudentMark(int studentID, int componentID) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        }
+
+        /**
          * Obtains a student mark given the student and component IDs
          */
         public StudentMarkInfo getStudentMark(int studentID, int componentID) {
@@ -231,9 +256,10 @@ namespace MarkTracker.include.db {
 
         /**
          * Updates the student mark into the database
+         * given an SMI object
          */
-        public int saveStudentMark(StudentMarkInfo smi) {
-            return -1;
+        public ErrorCode saveStudentMark(StudentMarkInfo smi) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         #endregion
@@ -248,8 +274,9 @@ namespace MarkTracker.include.db {
         /**
          * Update only the name field of a particular record.
          */
-        public int updateName(EntityConstants.EntityType type, int id, string newName) {
-            return -1;
+        public ErrorCode updateName(EntityConstants.EntityType type, 
+                                    int id, string newName) {
+            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
         }
 
         /**

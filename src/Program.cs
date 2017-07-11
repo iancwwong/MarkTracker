@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkTracker.testing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +12,13 @@ namespace MarkTracker {
         /// </summary>
         [STAThread]
         static void Main() {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new markTrackerForm());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new markTrackerForm());
+
+            /* Test the database */
+            DBTester dbTester = new DBTester();
+            dbTester.Run();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MarkTracker.include.db.DataLayerConstants;
 
 namespace MarkTracker.include.db {
 
@@ -16,15 +17,6 @@ namespace MarkTracker.include.db {
      * objects and relations (to and from data source)
      */
     public interface DataLayerInterface {
-
-        /*
-            NOTE: By convention, data layer operations that are carried
-            out successfully should return 0. For those "add" functions,
-            the ID of the newly created record is returned.
-
-            If an error has occurred, a negative error code should be returned,
-            that corresponds to a predefined error message.
-        */
         
         /**
          * ------------------------------------
@@ -36,12 +28,12 @@ namespace MarkTracker.include.db {
         /**
          * Creates the database / data file
          */
-        int createDB(string dbName);
+        ErrorCode createDB(string dbName);
 
         /**
          * Removes a data source
          */
-        int removeDB(string dbName);
+        ErrorCode removeDB(string dbName);
 
         /**
          * Check if a db with a certain name exists
@@ -51,12 +43,17 @@ namespace MarkTracker.include.db {
         /**
          * Open the data source
          */
-        int openDB(string dbName);
+        ErrorCode openDB(string dbName);
 
         /**
          * Close the currently opened data source
          */
-        int closeDB();
+        ErrorCode closeDB();
+
+        /**
+         * Checks if db is currently connected
+         */
+        bool hasConnection();
 
         #endregion
 
@@ -70,7 +67,7 @@ namespace MarkTracker.include.db {
         /**
          * Adds a new course into the DB with the specified name
          */
-        int addNewCourse(string newCourseName);
+        ErrorCode addNewCourse(string newCourseName);
 
         /**
          * Obtains a course object with the specified course ID
@@ -80,7 +77,7 @@ namespace MarkTracker.include.db {
         /**
          * Removes a course from the DB with the specified ID
          */
-        int deleteCourse(int courseID);
+        ErrorCode deleteCourse(int courseID);
 
         #endregion
 
@@ -94,7 +91,7 @@ namespace MarkTracker.include.db {
         /**
         * Adds a new assessment into the DB with the specified name
         */
-        int addNewAssessment(string newAssessmentName, int courseID);
+        ErrorCode addNewAssessment(string newAssessmentName, int courseID);
 
         /**
          * Obtains an assessment object with the specified course ID
@@ -104,7 +101,7 @@ namespace MarkTracker.include.db {
         /**
          * Removes an assessmente from the DB with the specified ID
          */
-        int deleteAssessment(int assessmentID);
+        ErrorCode deleteAssessment(int assessmentID);
 
         #endregion
 
@@ -120,7 +117,7 @@ namespace MarkTracker.include.db {
          * "parentComponentID":         null when creating a root component
          * "associatedAssessmentID":    null when creating a child component
          */
-        int addNewComponent(string newComponentName, 
+        ErrorCode addNewComponent(string newComponentName, 
                             Nullable<int> parentComponentID,        
                             Nullable<int> associatedAssessmentID);
 
@@ -132,7 +129,7 @@ namespace MarkTracker.include.db {
         /**
          * Removes a component from the DB with the specified ID
          */
-        int deleteComponent(int componentID);
+        ErrorCode deleteComponent(int componentID);
 
         #endregion
 
@@ -147,7 +144,7 @@ namespace MarkTracker.include.db {
         * Adds a new group into the DB with the specified name
         * and associated course
         */
-        int addNewGroup(string newGroupName, int associatedCourse);
+        ErrorCode addNewGroup(string newGroupName, int associatedCourse);
 
         /**
          * Obtains a group object with the specified ID
@@ -157,7 +154,7 @@ namespace MarkTracker.include.db {
         /**
          * Removes a group from the DB with the specified ID
          */
-        int deleteGroup(int groupID);
+        ErrorCode deleteGroup(int groupID);
 
         #endregion
 
@@ -172,7 +169,7 @@ namespace MarkTracker.include.db {
         * Adds a new student into the DB with the specified name
         * and associated group id
         */
-        int addNewStudent(string newStudentName, int groupID);
+        ErrorCode addNewStudent(string newStudentName, int groupID);
 
         /**
          * Obtains a student object with the specified ID
@@ -183,7 +180,7 @@ namespace MarkTracker.include.db {
          * Removes a student from the DB with the specified ID
          * and course ID
          */
-        int deleteStudent(int studentID, int courseID);
+        ErrorCode deleteStudent(int studentID, int courseID);
 
         #endregion
 
@@ -195,14 +192,20 @@ namespace MarkTracker.include.db {
         #region Student Mark Info Management Functions
 
         /**
+         * Create a new student mark record
+         */
+        ErrorCode addNewStudentMark(int studentID, int componentID);
+
+        /**
          * Obtains a student mark given the student and component IDs
          */
         StudentMarkInfo getStudentMark(int studentID, int componentID);
 
         /**
          * Updates the student mark into the database
+         * given an SMI object
          */
-        int saveStudentMark(StudentMarkInfo smi);
+        ErrorCode saveStudentMark(StudentMarkInfo smi);
 
         #endregion
 
@@ -216,7 +219,7 @@ namespace MarkTracker.include.db {
         /**
          * Update only the name field of a particular record.
          */
-        int updateName(EntityConstants.EntityType type, int id, string newName);
+        ErrorCode updateName(EntityConstants.EntityType type, int id, string newName);
 
         /**
          * Obtain a list of all course-assessment nodes from data source
