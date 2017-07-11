@@ -23,6 +23,8 @@ namespace MarkTracker.testing {
             Console.WriteLine("== Now running tests for data layer...");
 
             this.TestNewDataSource();
+            this.TestInitialiseDataSource();
+            this.TestCourseManipulation();
 
             Console.WriteLine("\n** All tests passed! You are AWESOME!");
             Console.Read();
@@ -85,17 +87,95 @@ namespace MarkTracker.testing {
 
             Console.WriteLine("= New Data Source testing complete.");
         }
-        
+
+        /**
+         * Test the initialisation of data source
+         */
+        private void TestInitialiseDataSource() {
+
+            Console.WriteLine("= Testing Initialisation...");
+            DataLayer db = new DataLayer();
+            ErrorCode result;         /* Track operation results */
+
+            /* Create db specific for this test */
+            string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_initTestDB";
+            this.CreateTestDB(testDBName, db);
+
+            /* Check that data source is not yet initialised */
+            Debug.Assert(db.dbInitialised() == false);
+            result = db.initialiseDB();
+            Debug.Assert(db.dbInitialised() == true);
+
+            /* Clean up */
+            this.CleanUp(testDBName, db);
+
+            Console.WriteLine("= Initialisation testing complete.");
+        }
+
+        /**
+         * Test functions related to courses
+         */
+        private void TestCourseManipulation() {
+            Console.WriteLine("= Testing Course manipulation...");
+            DataLayer db = new DataLayer();
+            ErrorCode result;         /* Track operation results */
+
+            /* Create db specific for this test */
+            string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_courseTestDB";
+            this.CreateTestDB(testDBName, db);
+
+            /* Insert some courses */
+            string courseName1 = "History";
+            string courseName2 = "Modern History";
+            string courseName3 = "Ancient History";
+            result = db.addNewCourse(courseName1);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            result = db.addNewCourse(courseName2);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            result = db.addNewCourse(courseName3);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+
+            /* Check duplicate course names cannot be added */
+            result = db.addNewCourse(courseName1);
+            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+            result = db.addNewCourse(courseName2);
+            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+            result = db.addNewCourse(courseName3);
+            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+
+            /* Clean up */
+            this.CleanUp(testDBName, db);
+
+            Console.WriteLine("= Course manipulation testing complete.");
+        }
+
 
         /**
          * Test function template
          */
         private void TestFunctionTemplate() {
-            Console.WriteLine("= Testing New Data Source...");
+            Console.WriteLine("= Testing Something...");
             DataLayer db = new DataLayer();
             ErrorCode result;         /* Track operation results */
 
-            Console.WriteLine("= New Data Source testing complete.");
+            Console.WriteLine("= Something testing complete.");
+        }
+
+        /**
+         * Test DB management
+         */
+        private void CreateTestDB(string testDBName, DataLayer db) {
+            Debug.Assert(db.dbExists(testDBName) == false);
+            db.createDB(testDBName);
+            ErrorCode result = db.openDB(testDBName);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
+        }
+
+        private void CleanUp(string testDBName, DataLayer db) {
+            ErrorCode result = db.closeDB();
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            result = db.removeDB(testDBName);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
         }
 
     }

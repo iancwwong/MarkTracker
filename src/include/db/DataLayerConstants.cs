@@ -22,8 +22,9 @@ namespace MarkTracker.include.db {
             ERROR_DB_OPENED = 3,            /* A database is opened */      
             ERROR_DB_CUR_OPENED = 4,        /* Same database is currently opened */
             ERROR_DB_CLOSED = 5,            /* Connection is closed */
+            ERROR_COURSE_ALREADY_EXISTS = 6,
 
-            ERROR_UNKNOWN = 9999
+            ERROR_UNKNOWN = 9999,
         }
     }
 }

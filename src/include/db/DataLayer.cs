@@ -98,6 +98,7 @@ namespace MarkTracker.include.db {
             this.dbConn = new SQLiteConnection("Data Source=" + fullDBName + ";Version=3;");
             this.dbConn.Open();
             this.curOpenDB = fullDBName;
+
             return ErrorCode.OP_SUCCESS;
         }
 
@@ -122,7 +123,158 @@ namespace MarkTracker.include.db {
          * Checks if db is currently connected
          */
         public bool hasConnection() {
-            return (this.dbConn != null && this.dbConn.State == System.Data.ConnectionState.Open);
+            return (this.dbConn != null && 
+                this.dbConn.State == System.Data.ConnectionState.Open);
+        }
+
+        /**
+         * initialises the tables
+         * for a data source with the given data source name
+         */
+        public ErrorCode initialiseDB() {
+            /* Check that the current database is opened */
+            if (this.dbConn == null 
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return ErrorCode.ERROR_DB_CLOSED;
+            }
+
+            /* Attempt to create the tables */
+            string sql;
+            SQLiteCommand command;
+
+            /* Course table */
+            sql = @"
+                    CREATE TABLE courses (
+	                    `id` INT PRIMARY KEY,
+	                    `name` CHAR(20) NOT NULL UNIQUE
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* Assessment table */
+            sql = @"
+                    CREATE TABLE assessments (
+	                    `id` INT PRIMARY KEY,
+	                    `name` CHAR(20) NOT NULL,
+	                    `dueDateTime` TEXT,
+	                    `marks` INT,
+	                    `weighting` INT,
+	                    `comments` TEXT,
+	                    `courseID` INT NOT NULL,
+
+	                    FOREIGN KEY(`courseID`) REFERENCES courses(`id`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* Component table */
+            sql = @"
+                    CREATE TABLE components (
+	                    `id` INT PRIMARY KEY,
+	                    `name` CHAR(20) NOT NULL,
+	                    `marks` INT,
+	                    `comments` TEXT,
+	                    `assessmentID` INT,
+	                    `parentComponent` INT,
+
+	                    FOREIGN KEY(`assessmentID`) REFERENCES assessments(`id`),
+	                    FOREIGN KEY(`parentComponent`) REFERENCES components(`id`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* Group table */
+            sql = @"
+                    CREATE TABLE groups (
+	                    `id` INT PRIMARY KEY,
+	                    `name` CHAR(20) NOT NULL
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* Student table */
+            sql = @"
+                    CREATE TABLE students (
+	                    `id` INT PRIMARY KEY,
+	                    `fname` CHAR(20) NOT NULL,
+	                    `lname` CHAR(20) NOT NULL,
+
+	                    UNIQUE (`fname`, `lname`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* student belongs in group table */
+            sql = @"
+                    CREATE TABLE student_belongs (
+	                    `groupID` INT NOT NULL,
+	                    `studID` INT NOT NULL,
+
+	                    PRIMARY KEY (`groupID`, `studID`),
+	                    FOREIGN KEY (`groupID`) REFERENCES groups(`id`),
+	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* group participates in course table */
+            sql = @"
+                    CREATE TABLE group_participate (
+	                    `courseID` INT NOT NULL,
+	                    `groupID` INT NOT NULL,
+
+	                    PRIMARY KEY (`courseID`, `groupID`),
+	                    FOREIGN KEY (`courseID`) REFERENCES courses(`id`),
+	                    FOREIGN KEY (`groupID`) REFERENCES groups(`id`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            /* student mark information table */
+            sql = @"
+                    CREATE TABLE student_mark_info (
+	                    `componentID` INT NOT NULL,
+	                    `studID` INT NOT NULL,
+	                    `givenMark` INT,
+	                    `feedback` TEXT,
+	
+	                    PRIMARY KEY (`componentID`, `studID`),
+	                    FOREIGN KEY (`componentID`) REFERENCES components(`id`),
+	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
+                    );
+                ";
+            command = new SQLiteCommand(sql, this.dbConn);
+            command.ExecuteNonQuery();
+
+            return ErrorCode.OP_SUCCESS;
+        }
+
+        /**
+         * Checks whether data source is initialised
+         */
+        public bool dbInitialised() {
+
+            /* Count the number of tables in the data source.
+             * There should be 8:
+             *  - Course, Assessment, Component, Group, Student,
+             *    student_belongs, group_participate, and smi
+             */
+            string sql = "SELECT count(*) as numTables FROM sqlite_master WHERE type = 'table' ORDER BY 1;";
+            SQLiteCommand command = new SQLiteCommand(sql, this.dbConn);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            int numTables = Convert.ToInt32(reader["numTables"]);
+            if (numTables != 8) {
+                return false;
+            }
+            return true;
         }
 
         #endregion

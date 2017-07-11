@@ -17,7 +17,7 @@ namespace MarkTracker.include.db {
      * objects and relations (to and from data source)
      */
     public interface DataLayerInterface {
-        
+
         /**
          * ------------------------------------
          * DB MANAGEMENT FUNCTIONS
@@ -54,6 +54,17 @@ namespace MarkTracker.include.db {
          * Checks if db is currently connected
          */
         bool hasConnection();
+
+        /**
+         * Creates and initialises the tables
+         * for a data source with the given data source name
+         */
+        ErrorCode initialiseDB();
+
+        /**
+         * Checks whether data source is initialised
+         */
+        bool dbInitialised();
 
         #endregion
 
