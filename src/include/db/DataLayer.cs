@@ -114,8 +114,10 @@ namespace MarkTracker.include.db {
 
             /* Close connection */
             this.dbConn.Close();
+            this.dbConn.Dispose();
             this.dbConn = null;
             this.curOpenDB = "";
+            GC.Collect();
             return ErrorCode.OP_SUCCESS;
         }
 
@@ -139,8 +141,8 @@ namespace MarkTracker.include.db {
             }
 
             /* Attempt to create the tables */
-            string sql;
-            SQLiteCommand command;
+            string sql = "";
+            SQLiteCommand command = new SQLiteCommand(this.dbConn);
 
             /* Course table */
             sql = @"
@@ -149,7 +151,7 @@ namespace MarkTracker.include.db {
 	                    `name` CHAR(20) NOT NULL UNIQUE
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* Assessment table */
@@ -166,7 +168,7 @@ namespace MarkTracker.include.db {
 	                    FOREIGN KEY(`courseID`) REFERENCES courses(`id`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* Component table */
@@ -183,7 +185,7 @@ namespace MarkTracker.include.db {
 	                    FOREIGN KEY(`parentComponent`) REFERENCES components(`id`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* Group table */
@@ -193,7 +195,7 @@ namespace MarkTracker.include.db {
 	                    `name` CHAR(20) NOT NULL
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* Student table */
@@ -206,7 +208,7 @@ namespace MarkTracker.include.db {
 	                    UNIQUE (`fname`, `lname`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* student belongs in group table */
@@ -220,7 +222,7 @@ namespace MarkTracker.include.db {
 	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* group participates in course table */
@@ -234,7 +236,7 @@ namespace MarkTracker.include.db {
 	                    FOREIGN KEY (`groupID`) REFERENCES groups(`id`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
 
             /* student mark information table */
@@ -250,8 +252,12 @@ namespace MarkTracker.include.db {
 	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
                     );
                 ";
-            command = new SQLiteCommand(sql, this.dbConn);
+            command.CommandText = sql;
             command.ExecuteNonQuery();
+
+            /* Dispose the command object */
+            command.Dispose();
+            GC.Collect();   /* forced garbage collector clean up */
 
             return ErrorCode.OP_SUCCESS;
         }
