@@ -3,6 +3,7 @@ using MarkTracker.include.nodes;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace MarkTracker.include.db {
         private SQLiteConnection dbConn = null;
 
         /* Name of currently opened database */
-        private string curDBName = "";
+        private string curOpenDB = "";
 
         /* Constructor */
         public DataLayer() { }
@@ -36,42 +37,92 @@ namespace MarkTracker.include.db {
          * Creates the database / data file
          */
         public ErrorCode createDB(string dbName) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
+            /* Check that the database file does not already exist */
+            if (File.Exists(fullDBName)) {
+                return ErrorCode.ERROR_DB_ALREADY_EXISTS;
+            }
+
+            /* Create the new data file */
+            SQLiteConnection.CreateFile(fullDBName);
+            return ErrorCode.OP_SUCCESS;
         }
 
         /**
          * Removes a data source
          */
         public ErrorCode removeDB(string dbName) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
+
+            /* Check that the data source exists */
+            if (!File.Exists(fullDBName)) {
+                return ErrorCode.ERROR_DB_NOT_EXIST;
+            }
+
+            /* Check that the db is currently not connected */
+            if (this.dbConn != null && this.curOpenDB.Equals(fullDBName)) {
+                return ErrorCode.ERROR_DB_CUR_OPENED;
+            }
+
+            /* Remove the database file */
+            File.Delete(fullDBName);
+            return ErrorCode.OP_SUCCESS;
         }
 
         /**
          * Check if a db with a certain name exists
          */
         public bool dbExists(string dbName) {
-            return false;
+            string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
+            return File.Exists(fullDBName);
         }
 
         /**
          * Open the data source
          */
         public ErrorCode openDB(string dbName) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
+
+            /* Check that there is no existing open connection */
+            if (this.dbConn != null
+                && this.dbConn.State == System.Data.ConnectionState.Open) {
+
+                if (this.curOpenDB.Equals(fullDBName)) {
+                    return ErrorCode.ERROR_DB_CUR_OPENED;
+                } else {
+                    return ErrorCode.ERROR_DB_OPENED;
+                }
+            }
+
+            /* Open given data source */
+            this.dbConn = new SQLiteConnection("Data Source=" + fullDBName + ";Version=3;");
+            this.dbConn.Open();
+            this.curOpenDB = fullDBName;
+            return ErrorCode.OP_SUCCESS;
         }
 
         /**
          * Close the currently opened data source
          */
         public ErrorCode closeDB() {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            /* Check that connection is not already closed */
+            if (this.dbConn == null 
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return ErrorCode.ERROR_DB_CLOSED;
+            }
+
+            /* Close connection */
+            this.dbConn.Close();
+            this.dbConn = null;
+            this.curOpenDB = "";
+            return ErrorCode.OP_SUCCESS;
         }
 
         /**
          * Checks if db is currently connected
          */
         public bool hasConnection() {
-            return false;
+            return (this.dbConn != null && this.dbConn.State == System.Data.ConnectionState.Open);
         }
 
         #endregion

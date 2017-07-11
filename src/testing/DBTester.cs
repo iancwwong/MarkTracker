@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MarkTracker.include.db.DataLayerConstants;
 
 namespace MarkTracker.testing {
 
@@ -34,41 +35,53 @@ namespace MarkTracker.testing {
         private void TestNewDataSource() {
             Console.WriteLine("= Testing New Data Source...");
             DataLayer db = new DataLayer();
-            DataLayerConstants.ErrorCode result;         /* Track operation results */
+            ErrorCode result;         /* Track operation results */
 
             /* Create test database */
-            string testDBName = "_testDB";
+            string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_testDB";
             string fileExt = DataLayerConstants.DB_FILE_EXTENSION;
             /* NOTE: Assumes the datalayer is file-oriented */
+            Console.WriteLine("testDBName: " + testDBName);
             Debug.Assert(File.Exists(testDBName + fileExt) == false);
             Debug.Assert(db.dbExists(testDBName) == false);
             result = db.createDB(testDBName);
-            Debug.Assert(result == DataLayerConstants.ErrorCode.OP_SUCCESS);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
             Debug.Assert(File.Exists(testDBName + fileExt) == true);
             Debug.Assert(db.dbExists(testDBName) == true);
 
             /* Check that it cannot create same db again */
-            Debug.Assert(db.createDB(testDBName) == DataLayerConstants.ErrorCode.ERROR_DB_ALREADY_EXISTS);
+            Debug.Assert(db.createDB(testDBName) == ErrorCode.ERROR_DB_ALREADY_EXISTS);
 
             /* Open connection and check */
             result = db.openDB(testDBName);
-            Debug.Assert(result == DataLayerConstants.ErrorCode.OP_SUCCESS);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
             Debug.Assert(db.hasConnection() == true);
+
+            /* Check a db cannot be opened */
+            result = db.openDB(testDBName);
+            Debug.Assert(result == ErrorCode.ERROR_DB_CUR_OPENED);
+            result = db.openDB("blah_db");
+            Debug.Assert(result == ErrorCode.ERROR_DB_OPENED);
+
+            /* Check that the currently opened DB cannot be removed */
+            result = db.removeDB(testDBName);
+            Debug.Assert(result == ErrorCode.ERROR_DB_CUR_OPENED);
+            Debug.Assert(File.Exists(testDBName + fileExt) == true);
 
             /* Close connection and check */
             result = db.closeDB();
-            Debug.Assert(result == DataLayerConstants.ErrorCode.OP_SUCCESS);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
             Debug.Assert(db.hasConnection() == false);
 
             /* Check deletion of data source */
             Debug.Assert(File.Exists(testDBName + fileExt) == true);
             result = db.removeDB(testDBName);
-            Debug.Assert(result == DataLayerConstants.ErrorCode.OP_SUCCESS);
+            Debug.Assert(result == ErrorCode.OP_SUCCESS);
             Debug.Assert(File.Exists(testDBName + fileExt) == false);
 
             /* Check that the same data source cannot be removed */
             result = db.removeDB(testDBName);
-            Debug.Assert(result == DataLayerConstants.ErrorCode.ERROR_DB_NOT_EXIST);
+            Debug.Assert(result == ErrorCode.ERROR_DB_NOT_EXIST);
 
             Console.WriteLine("= New Data Source testing complete.");
         }
@@ -80,7 +93,7 @@ namespace MarkTracker.testing {
         private void TestFunctionTemplate() {
             Console.WriteLine("= Testing New Data Source...");
             DataLayer db = new DataLayer();
-            DataLayerConstants.ErrorCode result;         /* Track operation results */
+            ErrorCode result;         /* Track operation results */
 
             Console.WriteLine("= New Data Source testing complete.");
         }

@@ -19,6 +19,9 @@ namespace MarkTracker.include.db {
             OP_SUCCESS = 0,
             ERROR_DB_ALREADY_EXISTS = 1,
             ERROR_DB_NOT_EXIST = 2,
+            ERROR_DB_OPENED = 3,            /* A database is opened */      
+            ERROR_DB_CUR_OPENED = 4,        /* Same database is currently opened */
+            ERROR_DB_CLOSED = 5,            /* Connection is closed */
 
             ERROR_UNKNOWN = 9999
         }
