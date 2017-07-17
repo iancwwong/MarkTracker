@@ -10,4 +10,7 @@ The application also allows users to preserve feedback. This feedback can be rel
 * Single context menu strips for both assessment panel and participation panel nodes.
 Note this will require manually disabling menu items (eg when right-clicking a course, adding a component should be disabled).
 
-* Include a "select" menu item in context menu strips that selects the node. 
+* Include a "select" menu item in context menu strips that selects the node.
+
+## Todo
+* Use Entity Framework (ORM) instead of hardcoded DB class

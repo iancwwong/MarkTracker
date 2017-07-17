@@ -24,7 +24,7 @@ namespace MarkTracker.testing {
 
             this.TestNewDataSource();
             this.TestInitialiseDataSource();
-            // this.TestCourseManipulation();
+            this.TestCourseManipulation();
 
             Console.WriteLine("\n** All tests passed! You are AWESOME!");
             Console.Read();
@@ -143,6 +143,11 @@ namespace MarkTracker.testing {
             result = db.addNewCourse(courseName3);
             Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
 
+            /* Update the course info using course objects */
+
+
+            /* Check properly updated */
+
             /* Clean up */
             this.CleanUp(testDBName, db);
 
@@ -162,7 +167,7 @@ namespace MarkTracker.testing {
         }
 
         /**
-         * Test DB management
+         * Create a database file with the name
          */
         private void CreateTestDB(string testDBName, DataLayer db) {
             Debug.Assert(db.dbExists(testDBName) == false);
@@ -171,6 +176,9 @@ namespace MarkTracker.testing {
             Debug.Assert(result == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
         }
 
+        /**
+         * Cleans up the created test database
+         */
         private void CleanUp(string testDBName, DataLayer db) {
             ErrorCode result = db.closeDB();
             Debug.Assert(result == ErrorCode.OP_SUCCESS);
