@@ -1,4 +1,5 @@
 ﻿using MarkTracker.include.db;
+using MarkTracker.include.entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;               /* Used for Debug.Assert. To preserve assert statements in "release", use Trace.Assert instead */
@@ -37,7 +38,7 @@ namespace MarkTracker.testing {
         private void TestNewDataSource() {
             Console.WriteLine("= Testing New Data Source...");
             DataLayer db = new DataLayer();
-            ErrorCode result;         /* Track operation results */
+            DBResult result;
 
             /* Create test database */
             string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_testDB";
@@ -45,45 +46,65 @@ namespace MarkTracker.testing {
             /* NOTE: Assumes the datalayer is file-oriented */
             Console.WriteLine("testDBName: " + testDBName);
             Debug.Assert(File.Exists(testDBName + fileExt) == false);
-            Debug.Assert(db.dbExists(testDBName) == false);
+
+            result = db.dbExists(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
+
             result = db.createDB(testDBName);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
             Debug.Assert(File.Exists(testDBName + fileExt) == true);
-            Debug.Assert(db.dbExists(testDBName) == true);
+            result = db.dbExists(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == true);
 
             /* Check that it cannot create same db again */
-            Debug.Assert(db.createDB(testDBName) == ErrorCode.ERROR_DB_ALREADY_EXISTS);
+            result = db.createDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_ALREADY_EXISTS);
 
             /* Open connection and check */
-            result = db.openDB(testDBName);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
-            Debug.Assert(db.hasConnection() == true);
+            result = db.hasConnection();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
 
-            /* Check a db cannot be opened */
             result = db.openDB(testDBName);
-            Debug.Assert(result == ErrorCode.ERROR_DB_CUR_OPENED);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            result = db.hasConnection();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == true);
+
+            /* Check db cannot be opened again */
+            result = db.openDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_CUR_OPENED);
             result = db.openDB("blah_db");
-            Debug.Assert(result == ErrorCode.ERROR_DB_OPENED);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_OPENED);
 
             /* Check that the currently opened DB cannot be removed */
             result = db.removeDB(testDBName);
-            Debug.Assert(result == ErrorCode.ERROR_DB_CUR_OPENED);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_CUR_OPENED);
             Debug.Assert(File.Exists(testDBName + fileExt) == true);
 
             /* Close connection and check */
             result = db.closeDB();
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
-            Debug.Assert(db.hasConnection() == false);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+
+            result = db.hasConnection();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
 
             /* Check deletion of data source */
             Debug.Assert(File.Exists(testDBName + fileExt) == true);
             result = db.removeDB(testDBName);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
             Debug.Assert(File.Exists(testDBName + fileExt) == false);
+
+            /* Deletion of data source that doesn't exist */
+            result = db.removeDB("_blah");
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_NOT_EXIST);
 
             /* Check that the same data source cannot be removed */
             result = db.removeDB(testDBName);
-            Debug.Assert(result == ErrorCode.ERROR_DB_NOT_EXIST);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_DB_NOT_EXIST);
 
             Console.WriteLine("= New Data Source testing complete.");
         }
@@ -95,16 +116,22 @@ namespace MarkTracker.testing {
 
             Console.WriteLine("= Testing Initialisation...");
             DataLayer db = new DataLayer();
-            ErrorCode result;         /* Track operation results */
+            DBResult result;         /* Track operation results */
 
             /* Create db specific for this test */
             string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_initTestDB";
             this.CreateTestDB(testDBName, db);
 
             /* Check that data source is not yet initialised */
-            Debug.Assert(db.dbInitialised() == false);
+            result = db.dbInitialised();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
+
             result = db.initialiseDB();
-            Debug.Assert(db.dbInitialised() == true);
+
+            result = db.dbInitialised();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == true);
 
             /* Clean up */
             this.CleanUp(testDBName, db);
@@ -118,33 +145,49 @@ namespace MarkTracker.testing {
         private void TestCourseManipulation() {
             Console.WriteLine("= Testing Course manipulation...");
             DataLayer db = new DataLayer();
-            ErrorCode result;         /* Track operation results */
+            DBResult result;         /* Track operation results */
 
             /* Create db specific for this test */
             string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_courseTestDB";
             this.CreateTestDB(testDBName, db);
 
             /* Insert some courses */
-            string courseName1 = "History";
-            string courseName2 = "Modern History";
-            string courseName3 = "Ancient History";
-            result = db.addNewCourse(courseName1);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
-            result = db.addNewCourse(courseName2);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
-            result = db.addNewCourse(courseName3);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            string c1Name = "History";
+            string c2Name = "Modern History";
+            string c3Name = "Ancient History";
+            result = db.addNewCourse(c1Name);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            int c1ID = result.intVal;
+
+            result = db.addNewCourse(c2Name);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            int c2ID = result.intVal;
+
+            result = db.addNewCourse(c3Name);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            int c3ID = result.intVal;
 
             /* Check duplicate course names cannot be added */
-            result = db.addNewCourse(courseName1);
-            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
-            result = db.addNewCourse(courseName2);
-            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
-            result = db.addNewCourse(courseName3);
-            Debug.Assert(result == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+            result = db.addNewCourse(c1Name);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+            result = db.addNewCourse(c2Name);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+            result = db.addNewCourse(c3Name);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
 
-            /* Update the course info using course objects */
+            /* Check that a course with invalid int cannot be obtained */
+            int courseID = -1;
+            result = db.getCourseObj(courseID);
+            Debug.Assert(result.ecode == ErrorCode.ERROR_COURSE_NOT_EXIST);
 
+            /* Check obtain course objects */
+            result = db.getCourseObj(c1ID);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.objectVal != null);
+            Course c1 = result.objectVal as Course;
+            Debug.Assert(c1.name.Equals(c1Name));
+
+            /* Update some courses */
 
             /* Check properly updated */
 
@@ -161,7 +204,7 @@ namespace MarkTracker.testing {
         private void TestFunctionTemplate() {
             Console.WriteLine("= Testing Something...");
             DataLayer db = new DataLayer();
-            ErrorCode result;         /* Track operation results */
+            DBResult result;         /* Track operation results */
 
             Console.WriteLine("= Something testing complete.");
         }
@@ -170,20 +213,25 @@ namespace MarkTracker.testing {
          * Create a database file with the name
          */
         private void CreateTestDB(string testDBName, DataLayer db) {
-            Debug.Assert(db.dbExists(testDBName) == false);
-            db.createDB(testDBName);
-            ErrorCode result = db.openDB(testDBName);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
+            DBResult result = db.dbExists(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
+
+            result = db.createDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+
+            result = db.openDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
         }
 
         /**
          * Cleans up the created test database
          */
         private void CleanUp(string testDBName, DataLayer db) {
-            ErrorCode result = db.closeDB();
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            DBResult result = db.closeDB();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
             result = db.removeDB(testDBName);
-            Debug.Assert(result == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
         }
 
     }

@@ -28,43 +28,43 @@ namespace MarkTracker.include.db {
         /**
          * Creates the database / data file
          */
-        ErrorCode createDB(string dbName);
+        DBResult createDB(string dbName);
 
         /**
          * Removes a data source
          */
-        ErrorCode removeDB(string dbName);
+        DBResult removeDB(string dbName);
 
         /**
          * Check if a db with a certain name exists
          */
-        bool dbExists(string dbName);
+        DBResult dbExists(string dbName);
 
         /**
          * Open the data source
          */
-        ErrorCode openDB(string dbName);
+        DBResult openDB(string dbName);
 
         /**
          * Close the currently opened data source
          */
-        ErrorCode closeDB();
+        DBResult closeDB();
 
         /**
          * Checks if db is currently connected
          */
-        bool hasConnection();
+        DBResult hasConnection();
 
         /**
          * Creates and initialises the tables
          * for a data source with the given data source name
          */
-        ErrorCode initialiseDB();
+        DBResult initialiseDB();
 
         /**
          * Checks whether data source is initialised
          */
-        bool dbInitialised();
+        DBResult dbInitialised();
 
         #endregion
 
@@ -78,17 +78,17 @@ namespace MarkTracker.include.db {
         /**
          * Adds a new course into the DB with the specified name
          */
-        ErrorCode addNewCourse(string newCourseName);
+        DBResult addNewCourse(string newCourseName);
 
         /**
          * Obtains a course object with the specified course ID
          */
-        Course getCourseObj(int courseID);
+        DBResult getCourseObj(int courseID);
 
         /**
          * Removes a course from the DB with the specified ID
          */
-        ErrorCode deleteCourse(int courseID);
+        DBResult deleteCourse(int courseID);
 
         #endregion
 
@@ -102,17 +102,17 @@ namespace MarkTracker.include.db {
         /**
         * Adds a new assessment into the DB with the specified name
         */
-        ErrorCode addNewAssessment(string newAssessmentName, int courseID);
+        DBResult addNewAssessment(string newAssessmentName, int courseID);
 
         /**
          * Obtains an assessment object with the specified course ID
          */
-        Assessment getAssessmentObj(int assessmentID);
+        DBResult getAssessmentObj(int assessmentID);
 
         /**
          * Removes an assessmente from the DB with the specified ID
          */
-        ErrorCode deleteAssessment(int assessmentID);
+        DBResult deleteAssessment(int assessmentID);
 
         #endregion
 
@@ -128,19 +128,19 @@ namespace MarkTracker.include.db {
          * "parentComponentID":         null when creating a root component
          * "associatedAssessmentID":    null when creating a child component
          */
-        ErrorCode addNewComponent(string newComponentName, 
+        DBResult addNewComponent(string newComponentName, 
                             Nullable<int> parentComponentID,        
                             Nullable<int> associatedAssessmentID);
 
         /**
          * Obtains a component object with the specified ID
          */
-        AssessmentComponent getComponentObj(int componentID);
+        DBResult getComponentObj(int componentID);
 
         /**
          * Removes a component from the DB with the specified ID
          */
-        ErrorCode deleteComponent(int componentID);
+        DBResult deleteComponent(int componentID);
 
         #endregion
 
@@ -155,17 +155,17 @@ namespace MarkTracker.include.db {
         * Adds a new group into the DB with the specified name
         * and associated course
         */
-        ErrorCode addNewGroup(string newGroupName, int associatedCourse);
+        DBResult addNewGroup(string newGroupName, int associatedCourse);
 
         /**
          * Obtains a group object with the specified ID
          */
-        Group getGroupObj(int groupID);
+        DBResult getGroupObj(int groupID);
 
         /**
          * Removes a group from the DB with the specified ID
          */
-        ErrorCode deleteGroup(int groupID);
+        DBResult deleteGroup(int groupID);
 
         #endregion
 
@@ -180,18 +180,18 @@ namespace MarkTracker.include.db {
         * Adds a new student into the DB with the specified name
         * and associated group id
         */
-        ErrorCode addNewStudent(string newStudentName, int groupID);
+        DBResult addNewStudent(string newStudentName, int groupID);
 
         /**
          * Obtains a student object with the specified ID
          */
-        Student getStudentObj(int studentID);
+        DBResult getStudentObj(int studentID);
 
         /**
          * Removes a student from the DB with the specified ID
          * and course ID
          */
-        ErrorCode deleteStudent(int studentID, int courseID);
+        DBResult deleteStudent(int studentID, int courseID);
 
         #endregion
 
@@ -205,18 +205,18 @@ namespace MarkTracker.include.db {
         /**
          * Create a new student mark record
          */
-        ErrorCode addNewStudentMark(int studentID, int componentID);
+        DBResult addNewStudentMark(int studentID, int componentID);
 
         /**
          * Obtains a student mark given the student and component IDs
          */
-        StudentMarkInfo getStudentMark(int studentID, int componentID);
+        DBResult getStudentMark(int studentID, int componentID);
 
         /**
          * Updates the student mark into the database
          * given an SMI object
          */
-        ErrorCode saveStudentMark(StudentMarkInfo smi);
+        DBResult saveStudentMark(StudentMarkInfo smi);
 
         #endregion
 
@@ -230,7 +230,7 @@ namespace MarkTracker.include.db {
         /**
          * Update only the name field of a particular record.
          */
-        ErrorCode updateName(EntityConstants.EntityType type, int id, string newName);
+        DBResult updateName(EntityConstants.EntityType type, int id, string newName);
 
         /**
          * Obtain a list of all course-assessment nodes from data source

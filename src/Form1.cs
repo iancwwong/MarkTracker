@@ -76,12 +76,19 @@ namespace MarkTracker {
 
             /* Create a new database if none exists */
             string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
-            if (!this.db.dbExists(dbName)) {
-                this.db.createDB(dbName);
+
+            DBResult result = this.db.dbExists(dbName);
+            if (result.ecode == DataLayerConstants.ErrorCode.OP_SUCCESS) {
+                result = this.db.createDB(dbName);
+                if (result.ecode == DataLayerConstants.ErrorCode.OP_SUCCESS) {
+                    /* Open data source connection */
+                    this.db.openDB(dbName);
+                    return;
+                }
             }
 
-            /* Open data source connection */
-            this.db.openDB(dbName);
+            /* A db operation could not be done */
+            MessageBox.Show("Error: " + result.ecode.ToString());
         }
 
         /**

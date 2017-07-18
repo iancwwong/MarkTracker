@@ -36,51 +36,52 @@ namespace MarkTracker.include.db {
         /**
          * Creates the database / data file
          */
-        public ErrorCode createDB(string dbName) {
+        public DBResult createDB(string dbName) {
+
             string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
             /* Check that the database file does not already exist */
             if (File.Exists(fullDBName)) {
-                return ErrorCode.ERROR_DB_ALREADY_EXISTS;
+                return new DBResult(ErrorCode.ERROR_DB_ALREADY_EXISTS);
             }
 
             /* Create the new data file */
             SQLiteConnection.CreateFile(fullDBName);
-            return ErrorCode.OP_SUCCESS;
+            return new DBResult(ErrorCode.OP_SUCCESS);
         }
 
         /**
          * Removes a data source
          */
-        public ErrorCode removeDB(string dbName) {
+        public DBResult removeDB(string dbName) {
             string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
 
             /* Check that the data source exists */
             if (!File.Exists(fullDBName)) {
-                return ErrorCode.ERROR_DB_NOT_EXIST;
+                return new DBResult(ErrorCode.ERROR_DB_NOT_EXIST);
             }
 
-            /* Check that the db is currently not connected */
+            /* Check that the db is currently not connected or opened */
             if (this.dbConn != null && this.curOpenDB.Equals(fullDBName)) {
-                return ErrorCode.ERROR_DB_CUR_OPENED;
+                return new DBResult(ErrorCode.ERROR_DB_CUR_OPENED);
             }
 
             /* Remove the database file */
             File.Delete(fullDBName);
-            return ErrorCode.OP_SUCCESS;
+            return new DBResult(ErrorCode.OP_SUCCESS);
         }
 
         /**
          * Check if a db with a certain name exists
          */
-        public bool dbExists(string dbName) {
+        public DBResult dbExists(string dbName) {
             string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
-            return File.Exists(fullDBName);
+            return new DBResult(File.Exists(fullDBName));
         }
 
         /**
          * Open the data source
          */
-        public ErrorCode openDB(string dbName) {
+        public DBResult openDB(string dbName) {
             string fullDBName = dbName + DataLayerConstants.DB_FILE_EXTENSION;
 
             /* Check that there is no existing open connection */
@@ -88,9 +89,9 @@ namespace MarkTracker.include.db {
                 && this.dbConn.State == System.Data.ConnectionState.Open) {
 
                 if (this.curOpenDB.Equals(fullDBName)) {
-                    return ErrorCode.ERROR_DB_CUR_OPENED;
+                    return new DBResult(ErrorCode.ERROR_DB_CUR_OPENED);
                 } else {
-                    return ErrorCode.ERROR_DB_OPENED;
+                    return new DBResult(ErrorCode.ERROR_DB_OPENED);
                 }
             }
 
@@ -99,17 +100,17 @@ namespace MarkTracker.include.db {
             this.dbConn.Open();
             this.curOpenDB = fullDBName;
 
-            return ErrorCode.OP_SUCCESS;
+            return new DBResult(ErrorCode.OP_SUCCESS);
         }
 
         /**
          * Close the currently opened data source
          */
-        public ErrorCode closeDB() {
+        public DBResult closeDB() {
             /* Check that connection is not already closed */
             if (this.dbConn == null 
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
-                return ErrorCode.ERROR_DB_CLOSED;
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
 
             /* Close connection */
@@ -118,26 +119,27 @@ namespace MarkTracker.include.db {
             this.dbConn = null;
             this.curOpenDB = "";
             GC.Collect();
-            return ErrorCode.OP_SUCCESS;
+            return new DBResult(ErrorCode.OP_SUCCESS);
         }
 
         /**
          * Checks if db is currently connected
          */
-        public bool hasConnection() {
-            return (this.dbConn != null && 
+        public DBResult hasConnection() {
+            bool result = (this.dbConn != null &&
                 this.dbConn.State == System.Data.ConnectionState.Open);
+            return new DBResult(result);
         }
 
         /**
          * initialises the tables
          * for a data source with the given data source name
          */
-        public ErrorCode initialiseDB() {
+        public DBResult initialiseDB() {
             /* Check that the current database is opened */
             if (this.dbConn == null 
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
-                return ErrorCode.ERROR_DB_CLOSED;
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
 
             /* Attempt to create the tables */
@@ -259,13 +261,13 @@ namespace MarkTracker.include.db {
             command.Dispose();
             GC.Collect();   /* forced garbage collector clean up */
 
-            return ErrorCode.OP_SUCCESS;
+            return new DBResult(ErrorCode.OP_SUCCESS);
         }
 
         /**
          * Checks whether data source is initialised
          */
-        public bool dbInitialised() {
+        public DBResult dbInitialised() {
 
             /* Count the number of tables in the data source.
              * There should be 8:
@@ -278,9 +280,9 @@ namespace MarkTracker.include.db {
             reader.Read();
             int numTables = Convert.ToInt32(reader["numTables"]);
             if (numTables != 8) {
-                return false;
+                return new DBResult(false);
             }
-            return true;
+            return new DBResult(true);
         }
 
         #endregion
@@ -295,22 +297,22 @@ namespace MarkTracker.include.db {
         /**
          * Adds a new course into the DB with the specified name
          */
-        public ErrorCode addNewCourse(string newCourseName) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult addNewCourse(string newCourseName) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains a course object with the specified course ID
          */
-        public Course getCourseObj(int courseID) {
-            return null;
+        public DBResult getCourseObj(int courseID) {
+            return new DBResult(null);
         }
 
         /**
          * Removes a course from the DB with the specified ID
          */
-        public ErrorCode deleteCourse(int courseID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult deleteCourse(int courseID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -325,22 +327,22 @@ namespace MarkTracker.include.db {
         /**
         * Adds a new assessment into the DB with the specified name
         */
-        public ErrorCode addNewAssessment(string newAssessmentName, int courseID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult addNewAssessment(string newAssessmentName, int courseID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains an assessment object with the specified course ID
          */
-        public Assessment getAssessmentObj(int assessmentID) {
-            return null;
+        public DBResult getAssessmentObj(int assessmentID) {
+            return new DBResult(null);
         }
 
         /**
          * Removes an assessmente from the DB with the specified ID
          */
-        public ErrorCode deleteAssessment(int assessmentID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult deleteAssessment(int assessmentID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -357,24 +359,24 @@ namespace MarkTracker.include.db {
          * "parentComponentID":         null when creating a root component
          * "associatedAssessmentID":    null when creating a child component
          */
-        public ErrorCode addNewComponent(string newComponentName,
+        public DBResult addNewComponent(string newComponentName,
                             Nullable<int> parentComponentID,
                             Nullable<int> associatedAssessmentID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains a component object with the specified ID
          */
-        public AssessmentComponent getComponentObj(int componentID) {
+        public DBResult getComponentObj(int componentID) {
             return null;
         }
 
         /**
          * Removes a component from the DB with the specified ID
          */
-        public ErrorCode deleteComponent(int componentID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult deleteComponent(int componentID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -390,22 +392,22 @@ namespace MarkTracker.include.db {
         * Adds a new group into the DB with the specified name
         * and associated course
         */
-        public ErrorCode addNewGroup(string newGroupName, int associatedCourse) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult addNewGroup(string newGroupName, int associatedCourse) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains a group object with the specified ID
          */
-        public Group getGroupObj(int groupID) {
-            return null;
+        public DBResult getGroupObj(int groupID) {
+            return new DBResult(null);
         }
 
         /**
          * Removes a group from the DB with the specified ID
          */
-        public ErrorCode deleteGroup(int groupID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult deleteGroup(int groupID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -421,23 +423,23 @@ namespace MarkTracker.include.db {
         * Adds a new student into the DB with the specified name
         * and associated group id
         */
-        public ErrorCode addNewStudent(string newStudentName, int groupID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult addNewStudent(string newStudentName, int groupID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains a student object with the specified ID
          */
-        public Student getStudentObj(int studentID) {
-            return null;
+        public DBResult getStudentObj(int studentID) {
+            return new DBResult(null);
         }
 
         /**
          * Removes a student from the DB with the specified ID
          * and course ID
          */
-        public ErrorCode deleteStudent(int studentID, int courseID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult deleteStudent(int studentID, int courseID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -452,23 +454,23 @@ namespace MarkTracker.include.db {
         /**
          * Create a new student mark record
          */
-        public ErrorCode addNewStudentMark(int studentID, int componentID) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult addNewStudentMark(int studentID, int componentID) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
          * Obtains a student mark given the student and component IDs
          */
-        public StudentMarkInfo getStudentMark(int studentID, int componentID) {
-            return null;
+        public DBResult getStudentMark(int studentID, int componentID) {
+            return new DBResult(null);
         }
 
         /**
          * Updates the student mark into the database
          * given an SMI object
          */
-        public ErrorCode saveStudentMark(StudentMarkInfo smi) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+        public DBResult saveStudentMark(StudentMarkInfo smi) {
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -483,9 +485,9 @@ namespace MarkTracker.include.db {
         /**
          * Update only the name field of a particular record.
          */
-        public ErrorCode updateName(EntityConstants.EntityType type, 
+        public DBResult updateName(EntityConstants.EntityType type, 
                                     int id, string newName) {
-            return DataLayerConstants.ErrorCode.ERROR_UNKNOWN;
+            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
         /**

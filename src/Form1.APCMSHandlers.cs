@@ -1,4 +1,5 @@
-﻿using MarkTracker.include;
+﻿
+using MarkTracker.include;
 using MarkTracker.include.entities;
 using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
@@ -32,7 +33,8 @@ namespace MarkTracker {
             string newCourseName = "New Course";        /* default */
 
             /* TODO: Update DB with the new course */
-            // int result = this.db.addNewCourse(newCourseName);
+            // Course newCourse = this.db.addNewCourse(newCourseName);
+
             UITreeViewNode newCourseNode =
                 new UITreeViewNode(EntityConstants.EntityType.Course,
                                         newCourseName,   /* default name of new course */
