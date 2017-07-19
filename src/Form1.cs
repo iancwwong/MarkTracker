@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MarkTracker.include.db.DataLayerConstants;
 
 namespace MarkTracker {
     public partial class markTrackerForm : Form {
@@ -72,23 +73,27 @@ namespace MarkTracker {
          */
         private void InitialiseDataConnection() {
 
+            /* Create data layer */
             this.db = new DataLayer();
 
             /* Create a new database if none exists */
             string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
-
             DBResult result = this.db.dbExists(dbName);
-            if (result.ecode == DataLayerConstants.ErrorCode.OP_SUCCESS) {
-                result = this.db.createDB(dbName);
-                if (result.ecode == DataLayerConstants.ErrorCode.OP_SUCCESS) {
-                    /* Open data source connection */
-                    this.db.openDB(dbName);
-                    return;
+            if (result.ecode == ErrorCode.OP_SUCCESS) {
+
+                /* Database doesn't exist - create */
+                if (result.boolVal == false) {
+                    this.db.createDB(dbName);
                 }
+
+                /* Open data source connection */
+                result = this.db.openDB(dbName);
             }
 
-            /* A db operation could not be done */
-            MessageBox.Show("Error: " + result.ecode.ToString());
+            if (result.ecode != ErrorCode.OP_SUCCESS) {
+                this.showDBError(result);
+                this.Close();
+            }
         }
 
         /**
@@ -227,6 +232,16 @@ namespace MarkTracker {
                 ppNode.Text = e.Label.ToString();
                 // this.db.updateName(ppNode.type, ppNode.id, ppNode.text);
                 //System.Diagnostics.Debug.WriteLine("PPNode Changed name to: " + e.Label.ToString());
+            }
+        }
+
+        /**
+         * Showing an error response from DB
+         */
+        private void showDBError(DBResult result) {
+            if (MessageBox.Show(result.ecode.ToString(), "", MessageBoxButtons.OKCancel)
+                == DialogResult.OK) {
+                /* Do nothing */
             }
         }
 

@@ -90,6 +90,11 @@ namespace MarkTracker.include.db {
          */
         DBResult deleteCourse(int courseID);
 
+        /**
+         * Updates a course given a course object
+         */
+        DBResult updateCourse(Course c);
+
         #endregion
 
         /**
@@ -113,6 +118,11 @@ namespace MarkTracker.include.db {
          * Removes an assessmente from the DB with the specified ID
          */
         DBResult deleteAssessment(int assessmentID);
+
+        /**
+         * Updates an assessment given a assessment object
+         */
+        DBResult updateAssessment(Assessment a);
 
         #endregion
 
@@ -142,6 +152,11 @@ namespace MarkTracker.include.db {
          */
         DBResult deleteComponent(int componentID);
 
+        /**
+         * Updates a component given a component object
+         */
+        DBResult updateComponent(AssessmentComponent ac);
+
         #endregion
 
         /**
@@ -166,6 +181,11 @@ namespace MarkTracker.include.db {
          * Removes a group from the DB with the specified ID
          */
         DBResult deleteGroup(int groupID);
+
+        /**
+         * Updates a group given a group object
+         */
+        DBResult updateGroup(Group g);
 
         #endregion
 
@@ -193,6 +213,11 @@ namespace MarkTracker.include.db {
          */
         DBResult deleteStudent(int studentID, int courseID);
 
+        /**
+         * Updates a student given a student object
+         */
+        DBResult updateStudent(Student s);
+
         #endregion
 
         /**
@@ -216,7 +241,7 @@ namespace MarkTracker.include.db {
          * Updates the student mark into the database
          * given an SMI object
          */
-        DBResult saveStudentMark(StudentMarkInfo smi);
+        DBResult updateStudentMark(StudentMarkInfo smi);
 
         #endregion
 

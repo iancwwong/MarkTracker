@@ -167,6 +167,11 @@ namespace MarkTracker.testing {
             Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
             int c3ID = result.intVal;
 
+            /* Check that all 3 ID's are not equal */
+            Debug.Assert(c1ID != c2ID);
+            Debug.Assert(c1ID != c3ID);
+            Debug.Assert(c2ID != c3ID);
+
             /* Check duplicate course names cannot be added */
             result = db.addNewCourse(c1Name);
             Debug.Assert(result.ecode == ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
@@ -185,11 +190,37 @@ namespace MarkTracker.testing {
             Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
             Debug.Assert(result.objectVal != null);
             Course c1 = result.objectVal as Course;
+            Debug.Assert(c1.id == c1ID);
             Debug.Assert(c1.name.Equals(c1Name));
 
+            result = db.getCourseObj(c2ID);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.objectVal != null);
+            Course c2 = result.objectVal as Course;
+            Debug.Assert(c2.id == c2ID);
+            Debug.Assert(c2.name.Equals(c2Name));
+
+            result = db.getCourseObj(c3ID);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.objectVal != null);
+            Course c3 = result.objectVal as Course;
+            Debug.Assert(c3.id == c3ID);
+            Debug.Assert(c3.name.Equals(c3Name));
+
             /* Update some courses */
+            string newC1Name = "Geography";
+            c1.name = newC1Name;
+            result = db.updateCourse(c1);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.intVal == c1ID);    /* Check that the ID's returned are the same */
 
             /* Check properly updated */
+            result = db.getCourseObj(c1ID);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.objectVal != null);
+            Course c1New = result.objectVal as Course;
+            Debug.Assert(c1New.name.Equals(c1.name));
+            Debug.Assert(c1New.id == c1.id);
 
             /* Clean up */
             this.CleanUp(testDBName, db);

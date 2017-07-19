@@ -298,6 +298,7 @@ namespace MarkTracker.include.db {
          * Adds a new course into the DB with the specified name
          */
         public DBResult addNewCourse(string newCourseName) {
+
             return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
@@ -315,6 +316,13 @@ namespace MarkTracker.include.db {
             return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
+        /**
+         * Updates a course given a course object
+         */
+        public DBResult updateCourse(Course c) {
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        }
+
         #endregion
 
         /**
@@ -328,7 +336,7 @@ namespace MarkTracker.include.db {
         * Adds a new assessment into the DB with the specified name
         */
         public DBResult addNewAssessment(string newAssessmentName, int courseID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
         }
 
         /**
@@ -342,7 +350,14 @@ namespace MarkTracker.include.db {
          * Removes an assessmente from the DB with the specified ID
          */
         public DBResult deleteAssessment(int assessmentID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        }
+
+        /**
+         * Updates an assessment given a assessment object
+         */
+        public DBResult updateAssessment(Assessment a) {
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -376,7 +391,14 @@ namespace MarkTracker.include.db {
          * Removes a component from the DB with the specified ID
          */
         public DBResult deleteComponent(int componentID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        }
+
+        /**
+         * Updates a component given a component object
+         */
+        public DBResult updateComponent(AssessmentComponent ac) {
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -407,7 +429,14 @@ namespace MarkTracker.include.db {
          * Removes a group from the DB with the specified ID
          */
         public DBResult deleteGroup(int groupID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        }
+
+        /**
+         * Updates a group given a group object
+         */
+        public DBResult updateGroup(Group g) {
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
         }
 
         #endregion
@@ -439,8 +468,16 @@ namespace MarkTracker.include.db {
          * and course ID
          */
         public DBResult deleteStudent(int studentID, int courseID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
         }
+
+        /**
+         * Updates a student given a student object
+         */
+        public DBResult updateStudent(Student s) {
+            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        }
+
 
         #endregion
 
@@ -469,7 +506,7 @@ namespace MarkTracker.include.db {
          * Updates the student mark into the database
          * given an SMI object
          */
-        public DBResult saveStudentMark(StudentMarkInfo smi) {
+        public DBResult updateStudentMark(StudentMarkInfo smi) {
             return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
         }
 
