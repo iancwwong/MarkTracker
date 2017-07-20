@@ -19,6 +19,8 @@ namespace MarkTracker.include.db {
         public int intVal { get; set; }             /* For when an int value is useful, eg addNewCourse */
         public bool boolVal { get; set; }           /* For when a bool value is useful, eg isConnected */
         public object objectVal { get; set; }       /* For when an object is useful, eg getCourseObj */
+        public bool opSuccess { get; set; }         /* Determines whether an operation was successful */
+        public string errorMsg { get; set; }        /* Error mesage for when a DB operation was not successful */
 
         /* Constructors */
         public DBResult() { }

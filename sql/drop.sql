@@ -1,0 +1,10 @@
+-- REMOVE ALL TABLES
+DROP TABLE IF EXISTS student_mark_info;
+DROP TABLE IF EXISTS group_participate;
+DROP TABLE IF EXISTS student_belongs;
+
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS components;
+DROP TABLE IF EXISTS assessments;
+DROP TABLE IF EXISTS courses;

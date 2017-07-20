@@ -148,112 +148,83 @@ namespace MarkTracker.include.db {
 
             /* Course table */
             sql = @"
-                    CREATE TABLE courses (
-	                    `id` INT PRIMARY KEY,
-	                    `name` CHAR(20) NOT NULL UNIQUE
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+-- Initialises tables in the db
+CREATE TABLE courses (
+	`name` CHAR(20) NOT NULL UNIQUE
+);
 
-            /* Assessment table */
-            sql = @"
-                    CREATE TABLE assessments (
-	                    `id` INT PRIMARY KEY,
-	                    `name` CHAR(20) NOT NULL,
-	                    `dueDateTime` TEXT,
-	                    `marks` INT,
-	                    `weighting` INT,
-	                    `comments` TEXT,
-	                    `courseID` INT NOT NULL,
+CREATE TABLE assessments (
+	`name` CHAR(20) NOT NULL,
+	`dueDateTime` TEXT,
+	`marks` INT,
+	`weighting` INT,
+	`comments` TEXT,
+	`courseID` INT NOT NULL,
 
-	                    FOREIGN KEY(`courseID`) REFERENCES courses(`id`)
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+	FOREIGN KEY(`courseID`) REFERENCES courses(`rowid`),
+	UNIQUE(`name`, `courseID`)
+);
 
-            /* Component table */
-            sql = @"
-                    CREATE TABLE components (
-	                    `id` INT PRIMARY KEY,
-	                    `name` CHAR(20) NOT NULL,
-	                    `marks` INT,
-	                    `comments` TEXT,
-	                    `assessmentID` INT,
-	                    `parentComponent` INT,
+CREATE TABLE components (
+	`name` CHAR(20) NOT NULL,
+	`marks` INT,
+	`comments` TEXT,
+	`assessmentID` INT,
+	`parentComponent` INT,
 
-	                    FOREIGN KEY(`assessmentID`) REFERENCES assessments(`id`),
-	                    FOREIGN KEY(`parentComponent`) REFERENCES components(`id`)
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+	FOREIGN KEY(`assessmentID`) REFERENCES assessments(`rowid`),
+	FOREIGN KEY(`parentComponent`) REFERENCES components(`rowid`),
+	UNIQUE(`name`, `parentComponent`)
+);
 
-            /* Group table */
-            sql = @"
-                    CREATE TABLE groups (
-	                    `id` INT PRIMARY KEY,
-	                    `name` CHAR(20) NOT NULL
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+CREATE TABLE groups (
+	`name` CHAR(20) NOT NULL,
+	`courseID` INT NOT NULL,
 
-            /* Student table */
-            sql = @"
-                    CREATE TABLE students (
-	                    `id` INT PRIMARY KEY,
-	                    `fname` CHAR(20) NOT NULL,
-	                    `lname` CHAR(20) NOT NULL,
+	FOREIGN KEY(`courseID`) REFERENCES courses(`rowid`),
+	UNIQUE(`name`, `courseID`)
+);
 
-	                    UNIQUE (`fname`, `lname`)
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+CREATE TABLE students (
+	`fname` CHAR(20) NOT NULL,
+	`lname` CHAR(20) NOT NULL,
 
-            /* student belongs in group table */
-            sql = @"
-                    CREATE TABLE student_belongs (
-	                    `groupID` INT NOT NULL,
-	                    `studID` INT NOT NULL,
+	UNIQUE (`fname`, `lname`)
+);
 
-	                    PRIMARY KEY (`groupID`, `studID`),
-	                    FOREIGN KEY (`groupID`) REFERENCES groups(`id`),
-	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+-- Association between student and group
+CREATE TABLE student_belongs (
+	`groupID` INT NOT NULL,
+	`studID` INT NOT NULL,
 
-            /* group participates in course table */
-            sql = @"
-                    CREATE TABLE group_participate (
-	                    `courseID` INT NOT NULL,
-	                    `groupID` INT NOT NULL,
+	PRIMARY KEY (`groupID`, `studID`),
+	FOREIGN KEY (`groupID`) REFERENCES groups(`rowid`),
+	FOREIGN KEY (`studID`) REFERENCES students(`rowid`)
+);
 
-	                    PRIMARY KEY (`courseID`, `groupID`),
-	                    FOREIGN KEY (`courseID`) REFERENCES courses(`id`),
-	                    FOREIGN KEY (`groupID`) REFERENCES groups(`id`)
-                    );
-                ";
-            command.CommandText = sql;
-            command.ExecuteNonQuery();
+-- Association between groups and courses
+CREATE TABLE group_participate (
+	`courseID` INT NOT NULL,
+	`groupID` INT NOT NULL,
 
-            /* student mark information table */
-            sql = @"
-                    CREATE TABLE student_mark_info (
-	                    `componentID` INT NOT NULL,
-	                    `studID` INT NOT NULL,
-	                    `givenMark` INT,
-	                    `feedback` TEXT,
+	PRIMARY KEY (`courseID`, `groupID`),
+	FOREIGN KEY (`courseID`) REFERENCES courses(`rowid`),
+	FOREIGN KEY (`groupID`) REFERENCES groups(`rowid`)
+);
+
+-- Student marks
+CREATE TABLE student_mark_info (
+	`componentID` INT NOT NULL,
+	`studID` INT NOT NULL,
+	`givenMark` INT,
+	`feedback` TEXT,
 	
-	                    PRIMARY KEY (`componentID`, `studID`),
-	                    FOREIGN KEY (`componentID`) REFERENCES components(`id`),
-	                    FOREIGN KEY (`studID`) REFERENCES students(`id`)
-                    );
+	PRIMARY KEY (`componentID`, `studID`),
+	FOREIGN KEY (`componentID`) REFERENCES components(`rowid`),
+	FOREIGN KEY (`studID`) REFERENCES students(`rowid`)
+);
                 ";
+
             command.CommandText = sql;
             command.ExecuteNonQuery();
 
@@ -299,13 +270,63 @@ namespace MarkTracker.include.db {
          */
         public DBResult addNewCourse(string newCourseName) {
 
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            /* DB Result to return */
+            DBResult result;
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            /* Prepare command object */
+            SQLiteCommand command = new SQLiteCommand(this.dbConn);
+
+            /* Create the new course */
+            /* NOTE: Assumes newCourseName is sanitised */
+            string sql = "INSERT INTO courses(name) VALUES ('" + newCourseName + "');";
+            try {
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+
+                /* Get the ID of the newly added course object */
+                sql = "SELECT rowid FROM courses WHERE name LIKE '" + newCourseName + "';";
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+                SQLiteDataReader reader = command.ExecuteReader();
+                reader.Read();
+                int id = Convert.ToInt32(reader["rowid"]); 
+
+                result = new DBResult(ErrorCode.OP_SUCCESS, id);
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+
+            } finally {
+                /* Dispose the command object */
+                command.Dispose();
+                GC.Collect();   /* forced garbage collector clean up */
+            }
+            return result;
         }
 
         /**
          * Obtains a course object with the specified course ID
          */
         public DBResult getCourseObj(int courseID) {
+
+            /* DB Result to return */
+            DBResult result;
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
             return new DBResult(null);
         }
 
