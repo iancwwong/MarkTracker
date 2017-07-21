@@ -295,15 +295,26 @@ CREATE TABLE student_mark_info (
                 command.ExecuteNonQuery();
                 SQLiteDataReader reader = command.ExecuteReader();
                 reader.Read();
-                int id = Convert.ToInt32(reader["rowid"]); 
-
+                int id = Convert.ToInt32(reader["rowid"]);
                 result = new DBResult(ErrorCode.OP_SUCCESS, id);
 
             } catch (SQLiteException e) {
                 Console.WriteLine("DB Error: " + e.Message);
                 /* SQL update error handlers go here */
-                /* FOR NOW, THROW ERROR UNKNOWN */
-                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+
+                /* Unique constraint failed - ie duplicate entry attempted */
+                /* NOTE: Ideally, the if statement should say:
+                 *      e.ErrorCode == SQLiteErrorCode.Constraint_Unique 
+                 * which is more specific
+                 */
+                if (e.ErrorCode == (int)SQLiteErrorCode.Constraint) { 
+                    result = new DBResult(ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+                }
+
+                /* Unknown error */
+                else {
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
 
             } finally {
                 /* Dispose the command object */
@@ -327,21 +338,113 @@ CREATE TABLE student_mark_info (
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
 
-            return new DBResult(null);
+            /* Attempt to retrieve the course using the id */
+            SQLiteCommand command = new SQLiteCommand(this.dbConn);
+            try {
+                string sql = "SELECT rowid,name FROM courses WHERE rowid = " + courseID + ";";
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+                SQLiteDataReader reader = command.ExecuteReader();
+                reader.Read();
+
+                /* Check if there are results */
+                if (reader.HasRows) {
+                    /* Parse into course object, and attach to result */
+                    Course c = new Course();
+                    c.id = Convert.ToInt32(reader["rowid"]);
+                    c.name = reader["name"] as string;
+                    result = new DBResult(ErrorCode.OP_SUCCESS, c);
+                } else {
+                    result = new DBResult(ErrorCode.ERROR_COURSE_NOT_EXIST);
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+            } finally {
+                /* Dispose the command object */
+                command.Dispose();
+                GC.Collect();   /* forced garbage collector clean up */
+            }
+
+            return result;
         }
 
         /**
          * Removes a course from the DB with the specified ID
          */
         public DBResult deleteCourse(int courseID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+
+            /* DB Result to return */
+            DBResult result;
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            /* Attempt to retrieve the course using the id */
+            SQLiteCommand command = new SQLiteCommand(this.dbConn);
+            try {
+                string sql = "DELETE FROM courses WHERE rowid = " + courseID + ";";
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+                result = new DBResult(ErrorCode.OP_SUCCESS);
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+            } finally {
+                /* Dispose the command object */
+                command.Dispose();
+                GC.Collect();   /* forced garbage collector clean up */
+            }
+
+            return result;
         }
 
         /**
          * Updates a course given a course object
          */
         public DBResult updateCourse(Course c) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+
+            /* DB Result to return */
+            DBResult result;
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            /* Attempt to retrieve the course using the id */
+            SQLiteCommand command = new SQLiteCommand(this.dbConn);
+            try {
+
+                /* NOTE: We only need to change the name */
+                string sql = 
+                    @"UPDATE courses SET name = '" + c.name + "' WHERE rowid = " + c.id + ";";
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+                result = new DBResult(ErrorCode.OP_SUCCESS);
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+            } finally {
+                /* Dispose the command object */
+                command.Dispose();
+                GC.Collect();   /* forced garbage collector clean up */
+            }
+
+            return result;
         }
 
         #endregion

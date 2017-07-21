@@ -120,7 +120,16 @@ namespace MarkTracker.testing {
 
             /* Create db specific for this test */
             string testDBName = System.Reflection.Assembly.GetExecutingAssembly().Location + "_initTestDB";
-            this.CreateTestDB(testDBName, db);
+            result = db.dbExists(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+            Debug.Assert(result.boolVal == false);
+
+            result = db.createDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
+
+            result = db.openDB(testDBName);
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
+
 
             /* Check that data source is not yet initialised */
             result = db.dbInitialised();
@@ -212,7 +221,6 @@ namespace MarkTracker.testing {
             c1.name = newC1Name;
             result = db.updateCourse(c1);
             Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
-            Debug.Assert(result.intVal == c1ID);    /* Check that the ID's returned are the same */
 
             /* Check properly updated */
             result = db.getCourseObj(c1ID);
@@ -253,6 +261,9 @@ namespace MarkTracker.testing {
 
             result = db.openDB(testDBName);
             Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);   /* check DB can be connected */
+
+            result = db.initialiseDB();
+            Debug.Assert(result.ecode == ErrorCode.OP_SUCCESS);
         }
 
         /**

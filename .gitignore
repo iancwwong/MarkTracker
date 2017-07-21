@@ -17,3 +17,8 @@ src/MarkTracker.sln
 
 # Packages and dependencies
 src/packages/
+
+# Sql stuff
+sql/*.db
+sql/*.mtdb
+sql/*.db-journal
