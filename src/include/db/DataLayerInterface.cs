@@ -259,9 +259,12 @@ namespace MarkTracker.include.db {
         DBResult updateName(EntityConstants.EntityType type, int id, string newName);
 
         /**
-         * Obtain a list of all course-assessment nodes from data source
+         * Obtain and prepare a list of all course-assessment nodes from data source
+         * as TreeNodes (all attached together, and with the appropriate Context Menu Strips
          */
-        List<UITreeViewNode> getAllAPNodes();
+        List<UITreeViewNode> getAllAPNodes(ContextMenuStrip courseCMS, 
+                                           ContextMenuStrip assessmentCMS,
+                                           ContextMenuStrip componentCMS);
 
         /**
          * Obtain a list of all participant nodes related to a particular course

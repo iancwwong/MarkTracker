@@ -23,10 +23,6 @@ namespace MarkTracker.include.nodes {
             this.ContextMenuStrip = cms;
         }
 
-        /* Constructor when no context menu strip is provided */
-        public UITreeViewNode(EntityConstants.EntityType eType, string name, UITreeViewNode parent)
-            : this(eType, name, parent, null) { }
-
         /* Obtain the reference of the absolute root node */
         public UITreeViewNode getRootNode() {
             UITreeViewNode curNode = this;

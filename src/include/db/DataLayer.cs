@@ -653,9 +653,10 @@ namespace MarkTracker.include.db {
         }
 
         /**
-         * Obtain a list of all root nodes (ie course nodes) from data source
+         * Obtain a list of all root nodes (ie course nodes) from data source,
+         * attaching all child nodes appropriately (ie assessments and components)
          */
-        public List<UITreeViewNode> getAllAPNodes() {
+        public List<UITreeViewNode> getAllAPNodes(ContextMenuStrip courseCMS, ContextMenuStrip assessmentCMS, ContextMenuStrip componentCMS) {
 
             /* Check that the current database is opened */
             if (this.dbConn == null
@@ -664,21 +665,28 @@ namespace MarkTracker.include.db {
                 return new List<UITreeViewNode>();
             }
 
-            /* For now, check DB has the data */
-            this.showDBCount();
-
             List<UITreeViewNode> result = new List<UITreeViewNode>();    /* Holds the final result */
 
             /* Get the list of courses */
-            List<UITreeViewNode> courseNodes = this.getAllCourseNodes();
-            result.AddRange(courseNodes);
+            List<UITreeViewNode> courseNodes = this.getAllCourseNodes(courseCMS);
+            result.AddRange(courseNodes);   /* NOTE: Because of the way a TreeView works, 
+                                             * We ONLY add the course nodes, and attach the 
+                                             * assessments to it (and then components to 
+                                             * assessessments). */
+
             foreach (UITreeViewNode courseNode in courseNodes) {
+
                 /* Attach all assessments for this course */
-                this.hookAllAssessmentNodes(courseNode.id, courseNode);
-                //foreach (UITreeViewNode assessmentNode in assessmentNodes) {
-                //    List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id);
-                //}
+                List<UITreeViewNode> assessmentNodes = this.getAllAssessmentNodes(courseNode.id, courseNode, assessmentCMS);
+                foreach (UITreeViewNode assessmentNode in assessmentNodes) {
+
+                    /* Attach all component nodes for this assessment, and components to components */
+                    List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id, assessmentNode, componentCMS);
+                }
             }
+
+            /* For now, check DB has the data */
+            this.showDBCount();
 
             return result;
         }
@@ -770,7 +778,7 @@ namespace MarkTracker.include.db {
          * Return a list of course nodes as UITreeViewNodes
          * NOTE: Assumes DB connection is open and connected
          */
-        private List<UITreeViewNode> getAllCourseNodes() {
+        private List<UITreeViewNode> getAllCourseNodes(ContextMenuStrip courseCMS) {
             List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
 
             SQLiteCommand command;
@@ -788,7 +796,8 @@ namespace MarkTracker.include.db {
                         UITreeViewNode courseNode = new UITreeViewNode(
                                 EntityConstants.EntityType.Course,
                                 Convert.ToString(reader["name"]),
-                                null        /* Courses have no parent nodes */
+                                null ,       /* Courses have no parent nodes */
+                                courseCMS
                             );
                         courseNode.id = Convert.ToInt32(reader["rowid"]);
                         result.Add(courseNode);
@@ -807,7 +816,7 @@ namespace MarkTracker.include.db {
          * Return a list of assessment nodes as UITreeViewNodes
          * NOTE: Assumes DB connection is open and connected
          */
-        private List<UITreeViewNode> hookAllAssessmentNodes(int courseID, UITreeViewNode courseNode) {
+        private List<UITreeViewNode> getAllAssessmentNodes(int courseID, UITreeViewNode courseNode, ContextMenuStrip assessmentCMS) {
 
             List<UITreeViewNode> result = new List<UITreeViewNode>();
 
@@ -824,9 +833,10 @@ namespace MarkTracker.include.db {
                     /* Read all the records */
                     while (reader.Read()) {
                         UITreeViewNode assessmentNode = new UITreeViewNode(
-                                EntityConstants.EntityType.Assessment,
-                                Convert.ToString(reader["name"]),
-                                courseNode       /* Parent of this assessment is given courseNode */
+                                    EntityConstants.EntityType.Assessment,
+                                    Convert.ToString(reader["name"]),
+                                    courseNode,       /* Parent of this assessment is given courseNode */
+                                    assessmentCMS
                             );
                         assessmentNode.id = Convert.ToInt32(reader["rowid"]);
                         courseNode.Nodes.Add(assessmentNode);       /* Hook this assessment node to course node */
@@ -842,6 +852,80 @@ namespace MarkTracker.include.db {
         }
 
         //this.getAllComponentNodes(assessmentNode.id);
+        /**
+         * Return a list of component nodes as UITreeViewNodes
+         * NOTE: Assumes DB connection is open and connected
+         */
+        private List<UITreeViewNode> getAllComponentNodes(int assessmentID, UITreeViewNode assessmentNode, ContextMenuStrip componentCMS) {
+
+            List<UITreeViewNode> result = new List<UITreeViewNode>();
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+                using (command = new SQLiteCommand(this.dbConn)) {
+
+                    /* NOTE: This is a hacky method to obtain components and 
+                     * hook them to each other appropriately, exploiting the
+                     * fact that the componentID < parentID.
+                     * 
+                     * This sql statement provides the records with the above
+                     * property. In particular, it'll show the components in 
+                     * increasing tree depth (root -> 1st level -> 2nd level etc.) */
+                    sql = @"SELECT rowid,* FROM components 
+                            WHERE (assessmentID = " + assessmentID + @")
+                            ORDER BY parentComponent ASC, rowid ASC;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+
+                    /* Read all the records */
+                    while (reader.Read()) {
+                        UITreeViewNode componentNode = new UITreeViewNode(
+                                EntityConstants.EntityType.Component,
+                                Convert.ToString(reader["name"]),
+                                null,      /* For now, component is attached to nothing */
+                                componentCMS
+                            );
+                        componentNode.id = Convert.ToInt32(reader["rowid"]);
+
+                        /* Find the correct assessment / component node to hook */
+                        /* Case when the component is root level */
+                        if (reader.IsDBNull(reader.GetOrdinal("parentComponent"))) {
+                            assessmentNode.Nodes.Add(componentNode);       /* Hook this assessment node to course node */
+                            componentNode.parentNode = assessmentNode;
+                        }
+
+                        /* Case when parent component is another component */
+                        else {
+                            /* Find the parent component */
+                            int parentComponentNodeID = Convert.ToInt32(reader["parentComponent"]);
+
+                            /* NOTE: This is hacky!! (Because 'result' is 
+                             * guaranteed to contain the parent node. 
+                             * Refer to the note earlier in this function */
+                            UITreeViewNode parentComponentNode = null;          /* Assigned null to remove compiler issues */
+                            foreach (UITreeViewNode cnode in result) {          /* NOTE: This is also a linear search in a sorted list.
+                                                                                 * Further optimisations can be done, eg binary search. */
+                                if (cnode.id == parentComponentNodeID) {
+                                    parentComponentNode = cnode;
+                                    break;
+                                }
+                            }
+                            parentComponentNode.Nodes.Add(componentNode);
+                            componentNode.parentNode = parentComponentNode;
+                        }
+                        result.Add(componentNode);
+                    }
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+            }
+            return result;
+        }
 
 
         #endregion
