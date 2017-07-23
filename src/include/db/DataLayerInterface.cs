@@ -267,6 +267,11 @@ namespace MarkTracker.include.db {
          */
         List<UITreeViewNode> getAllPPNodes(int courseID);
 
+        /**
+         * Retrieve the number of records across all tables
+         */
+        void showDBCount();
+
         #endregion
 
     }

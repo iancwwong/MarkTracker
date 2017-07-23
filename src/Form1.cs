@@ -1,5 +1,6 @@
 ﻿using MarkTracker.include;
 using MarkTracker.include.db;
+using MarkTracker.include.entities;
 using MarkTracker.include.forms;
 using MarkTracker.include.nodes;
 using System;
@@ -46,7 +47,7 @@ namespace MarkTracker {
             HookUIComponents();
 
             /* Initialise database connection */
-            string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
+            string dbName = "testDB";        /* default name */
             InitialiseDataConnection(dbName);
 
             /* Load the course and assessment data */
@@ -108,9 +109,50 @@ namespace MarkTracker {
          * appropriate nodes
          */
         private void LoadAPContent() {
+
+            /* Obtain all the nodes */
             List<UITreeViewNode> allAPNodes = this.db.getAllAPNodes();
+
+            /* Attach all the context menu strips to all nodes appropriately */
+            this.attachCMSToAllAPNodes(allAPNodes);
+
+            /* Finally, add the nodes to the UI tree view */
             this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
             this.assessmentPanel.CollapseAll();
+        }
+
+        /**
+         * Attach the correct Context Menu Strip to all UITreeViewNodes
+         */
+        private void attachCMSToAllAPNodes(List<UITreeViewNode> apNodes) {
+            foreach (UITreeViewNode node in apNodes) {
+                switch (node.type) {
+
+                    case EntityConstants.EntityType.Course:
+                        node.ContextMenuStrip = this.apCourseContextMenu;
+                        break;
+
+                    case EntityConstants.EntityType.Assessment:
+                        node.ContextMenuStrip = this.apAssessmentContextMenu;
+                        break;
+
+                    case EntityConstants.EntityType.Component:
+                        node.ContextMenuStrip = this.apComponentContextMenu;
+                        break;
+
+                    case EntityConstants.EntityType.Group:
+                        node.ContextMenuStrip = this.ppGroupContextMenu;
+                        break;
+
+                    case EntityConstants.EntityType.Student:
+                        node.ContextMenuStrip = this.ppStudentContextMenu;
+                        break;
+
+                    default:
+                        break;      /* Should not get here */
+                }
+            }
+
         }
 
         /**

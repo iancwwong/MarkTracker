@@ -12,13 +12,13 @@ namespace MarkTracker {
         /// </summary>
         [STAThread]
         static void Main() {
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new markTrackerForm());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new markTrackerForm());
 
             /* Test the database */
-            DBTester dbTester = new DBTester();
-            dbTester.Run();
+            //dbtester dbtester = new dbtester();
+            //dbtester.run();
         }
     }
 }

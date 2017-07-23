@@ -655,6 +655,17 @@ namespace MarkTracker.include.db {
          * Obtain a list of all course-assessment nodes from data source
          */
         public List<UITreeViewNode> getAllAPNodes() {
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                Console.WriteLine("Error: DB not yet opened");
+                return new List<UITreeViewNode>();
+            }
+
+            /* For now, check DB has the data */
+            this.showDBCount();
+
             return new List<UITreeViewNode>();
         }
 
@@ -663,6 +674,75 @@ namespace MarkTracker.include.db {
          */
         public List<UITreeViewNode> getAllPPNodes(int courseID) {
             return new List<UITreeViewNode>();
+        }
+
+        /**
+         * Retrieve the number of records across all tables
+         */
+        public void showDBCount() {
+
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                Console.WriteLine("Error: DB not yet opened");
+                return;
+            }
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT COUNT(*) AS count FROM courses;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    Console.WriteLine("Num courses: " + reader["count"]);
+                }
+
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT COUNT(*) AS count FROM assessments;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    Console.WriteLine("Num assessents: " + reader["count"]);
+                }
+
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT COUNT(*) AS count FROM components;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    Console.WriteLine("Num components: " + reader["count"]);
+                }
+
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT COUNT(*) AS count FROM groups;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    Console.WriteLine("Num groups: " + reader["count"]);
+                }
+
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT COUNT(*) AS count FROM students;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    Console.WriteLine("Num studentse: " + reader["count"]);
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+            }
         }
 
         #endregion
