@@ -119,6 +119,7 @@ namespace MarkTracker {
             /* Finally, add the nodes to the UI tree view */
             this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
             this.assessmentPanel.CollapseAll();
+            this.assessmentPanel.SelectedNode = null;
         }
 
         /**

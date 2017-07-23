@@ -666,7 +666,22 @@ namespace MarkTracker.include.db {
             /* For now, check DB has the data */
             this.showDBCount();
 
-            return new List<UITreeViewNode>();
+            List<UITreeViewNode> result = new List<UITreeViewNode>();    /* Holds the final result */
+
+            /* Get the list of courses */
+            List<UITreeViewNode> courseNodes = this.getAllCourseNodes();
+            result.AddRange(courseNodes);
+            //foreach (UITreeViewNode courseNode in courseNodes) {
+            //    /* Get the list of assessments for this course */
+            //    List<UITreeViewNode> assessmentNodes = this.getAllAssessmentNodes(courseNode.id);
+            //    result.AddRange(assessmentNodes);
+            //    foreach (UITreeViewNode assessmentNode in assessmentNodes) {
+            //        List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id);
+            //        result.AddRange(componentNodes);
+            //    }
+            //}
+
+            return result;
         }
 
         /**
@@ -744,6 +759,57 @@ namespace MarkTracker.include.db {
                 /* FOR NOW, THROW ERROR UNKNOWN */
             }
         }
+
+        #endregion
+
+        /**
+         * Functions private to this class
+         */
+        #region Private functions
+
+        /**
+         * Return a list of course nodes as UITreeViewNodes
+         * NOTE: Assumes DB connection is open and connected
+         */
+        private List<UITreeViewNode> getAllCourseNodes() {
+            List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT rowid,* FROM courses;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+
+                    /* Read all the records */
+                    while (reader.Read()) {
+                        UITreeViewNode courseNode = new UITreeViewNode(
+                                EntityConstants.EntityType.Course,
+                                Convert.ToString(reader["name"]),
+                                null        /* Courses have no parent nodes */
+                            );
+                        courseNode.id = Convert.ToInt32(reader["rowid"]);
+                        result.Add(courseNode);
+                    }
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+            } 
+
+            return result;
+        }
+
+        /*
+        this.getAllAssessmentNodes(courseNode.id)
+
+        this.getAllComponentNodes(assessmentNode.id);
+        */
+
 
         #endregion
 
