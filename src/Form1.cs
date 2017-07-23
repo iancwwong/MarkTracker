@@ -46,7 +46,8 @@ namespace MarkTracker {
             HookUIComponents();
 
             /* Initialise database connection */
-            InitialiseDataConnection();
+            string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
+            InitialiseDataConnection(dbName);
 
             /* Load the course and assessment data */
             LoadAPContent();
@@ -71,23 +72,28 @@ namespace MarkTracker {
         /**
          * Opens connection to data source
          */
-        private void InitialiseDataConnection() {
+        private void InitialiseDataConnection(string dbName) {
 
             /* Create data layer */
             this.db = new DataLayer();
 
             /* Create a new database if none exists */
-            string dbName = "data.mtdb";        /* default name; mtdb is default extension ("MarkTracker Database") */
             DBResult result = this.db.dbExists(dbName);
             if (result.ecode == ErrorCode.OP_SUCCESS) {
 
                 /* Database doesn't exist - create */
+                bool needToInit = false;
                 if (result.boolVal == false) {
                     this.db.createDB(dbName);
+                    needToInit = true;
                 }
 
                 /* Open data source connection */
                 result = this.db.openDB(dbName);
+
+                if (needToInit) {
+                    this.db.initialiseDB();
+                }
             }
 
             if (result.ecode != ErrorCode.OP_SUCCESS) {
@@ -104,6 +110,7 @@ namespace MarkTracker {
         private void LoadAPContent() {
             List<UITreeViewNode> allAPNodes = this.db.getAllAPNodes();
             this.assessmentPanel.Nodes.AddRange(allAPNodes.ToArray());
+            this.assessmentPanel.CollapseAll();
         }
 
         /**
