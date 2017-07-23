@@ -3,6 +3,7 @@ using MarkTracker.include.nodes;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Windows.Forms;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -652,7 +653,7 @@ namespace MarkTracker.include.db {
         }
 
         /**
-         * Obtain a list of all course-assessment nodes from data source
+         * Obtain a list of all root nodes (ie course nodes) from data source
          */
         public List<UITreeViewNode> getAllAPNodes() {
 
@@ -671,15 +672,13 @@ namespace MarkTracker.include.db {
             /* Get the list of courses */
             List<UITreeViewNode> courseNodes = this.getAllCourseNodes();
             result.AddRange(courseNodes);
-            //foreach (UITreeViewNode courseNode in courseNodes) {
-            //    /* Get the list of assessments for this course */
-            //    List<UITreeViewNode> assessmentNodes = this.getAllAssessmentNodes(courseNode.id);
-            //    result.AddRange(assessmentNodes);
-            //    foreach (UITreeViewNode assessmentNode in assessmentNodes) {
-            //        List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id);
-            //        result.AddRange(componentNodes);
-            //    }
-            //}
+            foreach (UITreeViewNode courseNode in courseNodes) {
+                /* Attach all assessments for this course */
+                this.hookAllAssessmentNodes(courseNode.id, courseNode);
+                //foreach (UITreeViewNode assessmentNode in assessmentNodes) {
+                //    List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id);
+                //}
+            }
 
             return result;
         }
@@ -804,11 +803,45 @@ namespace MarkTracker.include.db {
             return result;
         }
 
-        /*
-        this.getAllAssessmentNodes(courseNode.id)
+        /**
+         * Return a list of assessment nodes as UITreeViewNodes
+         * NOTE: Assumes DB connection is open and connected
+         */
+        private List<UITreeViewNode> hookAllAssessmentNodes(int courseID, UITreeViewNode courseNode) {
 
-        this.getAllComponentNodes(assessmentNode.id);
-        */
+            List<UITreeViewNode> result = new List<UITreeViewNode>();
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT rowid,* FROM assessments WHERE courseID = " + courseID + ";";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+
+                    /* Read all the records */
+                    while (reader.Read()) {
+                        UITreeViewNode assessmentNode = new UITreeViewNode(
+                                EntityConstants.EntityType.Assessment,
+                                Convert.ToString(reader["name"]),
+                                courseNode       /* Parent of this assessment is given courseNode */
+                            );
+                        assessmentNode.id = Convert.ToInt32(reader["rowid"]);
+                        courseNode.Nodes.Add(assessmentNode);       /* Hook this assessment node to course node */
+                        result.Add(assessmentNode);
+                    }
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+            }
+            return result;
+        }
+
+        //this.getAllComponentNodes(assessmentNode.id);
 
 
         #endregion
