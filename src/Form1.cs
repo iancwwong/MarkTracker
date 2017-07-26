@@ -194,14 +194,21 @@ namespace MarkTracker {
             if (newSelCourseID != this.curSelCourseID) {
                 /* Initiate the participant panel nodes */
                 this.curSelCourseID = newSelCourseID;
-                // TODO: parse data into nodes for pp
-                // this.participantPanel.Nodes.add(this.db.getAllParticipantNodes(this.curSelCourseID));
 
-                /* Attach context menu strip */
+                Console.WriteLine("Loading pp nodes for course: " + this.curSelCourseID);
+
+                /* Obtain all PP Nodes, and add them to this treeview */
+                List<UITreeViewNode> allPPNodes = this.db.getAllPPNodes(this.curSelCourseID,
+                                                                        this.ppGroupContextMenu,
+                                                                        this.ppStudentContextMenu);
+                this.participantPanel.Nodes.AddRange(allPPNodes.ToArray());
+
+                /* Attach context menu strip to treeview panel */
                 this.participantPanel.ContextMenuStrip = this.ppContextMenu;
 
-                /* Collapse all for better UI aesthetics */
+                /* aesthetics */
                 this.participantPanel.CollapseAll();
+                this.participantPanel.SelectedNode = null;
             }
 
             /* Keep the double-clicked node expanded */

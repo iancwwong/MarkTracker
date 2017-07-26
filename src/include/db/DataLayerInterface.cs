@@ -269,7 +269,9 @@ namespace MarkTracker.include.db {
         /**
          * Obtain a list of all participant nodes related to a particular course
          */
-        List<UITreeViewNode> getAllPPNodes(int courseID);
+        List<UITreeViewNode> getAllPPNodes(int courseID, 
+                                           ContextMenuStrip groupCMS, 
+                                           ContextMenuStrip studentCMS);
 
         /**
          * Retrieve the number of records across all tables

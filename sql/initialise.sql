@@ -1,4 +1,5 @@
 -- Initialises tables in the db
+-- NOTE: Each record has a specific ID attribute (not stated)
 CREATE TABLE courses (
 	`name` CHAR(20) NOT NULL UNIQUE
 );
@@ -42,24 +43,14 @@ CREATE TABLE students (
 	UNIQUE (`fname`, `lname`)
 );
 
--- Association between student and group
+-- Students and groups association
 CREATE TABLE student_belongs (
 	`groupID` INT NOT NULL,
 	`studID` INT NOT NULL,
 
-	PRIMARY KEY (`groupID`, `studID`),
-	FOREIGN KEY (`groupID`) REFERENCES groups(`rowid`),
-	FOREIGN KEY (`studID`) REFERENCES students(`rowid`)
-);
-
--- Association between groups and courses
-CREATE TABLE group_participate (
-	`courseID` INT NOT NULL,
-	`groupID` INT NOT NULL,
-
-	PRIMARY KEY (`courseID`, `groupID`),
-	FOREIGN KEY (`courseID`) REFERENCES courses(`rowid`),
-	FOREIGN KEY (`groupID`) REFERENCES groups(`rowid`)
+	FOREIGN KEY(`groupID`) REFERENCES groups(`rowid`),
+	FOREIGN KEY(`studID`) REFERENCES students(`rowid`),
+	UNIQUE(`groupID`, `studID`)
 );
 
 -- Student marks

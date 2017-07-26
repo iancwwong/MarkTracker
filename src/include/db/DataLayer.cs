@@ -694,8 +694,31 @@ namespace MarkTracker.include.db {
         /**
          * Obtain a list of all participant nodes related to a particular course
          */
-        public List<UITreeViewNode> getAllPPNodes(int courseID) {
-            return new List<UITreeViewNode>();
+        public List<UITreeViewNode> getAllPPNodes(int courseID,
+                                           ContextMenuStrip groupCMS,
+                                           ContextMenuStrip studentCMS) {
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                Console.WriteLine("Error: DB not yet opened");
+                return new List<UITreeViewNode>();
+            }
+
+            List<UITreeViewNode> result = new List<UITreeViewNode>();    /* Holds the final result */
+
+            /* Get the list of group nodes */
+            List<UITreeViewNode> groupNodes = this.getAllGroupNodes(courseID, groupCMS);
+            result.AddRange(groupNodes);   /* NOTE: Because of the way a TreeView works, 
+                                             * We ONLY add the group nodes, and attach the 
+                                             * assessments to it (and then components to 
+                                             * assessessments). Similar to courses */
+
+            /* Attach all students for this group */
+            foreach (UITreeViewNode groupNode in groupNodes) {
+                this.getAllStudentNodes(groupNode.id, groupNode, studentCMS);
+            }
+
+            return result;
         }
 
         /**
@@ -927,6 +950,90 @@ namespace MarkTracker.include.db {
             return result;
         }
 
+        /**
+         * Obtain all groups as UITreeViewNodes 
+         * NOTE: Assumes DB connection is open and connected
+         */
+        private List<UITreeViewNode> getAllGroupNodes(int courseID, ContextMenuStrip groupCMS) {
+            List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = "SELECT rowid,* FROM groups WHERE rowid = " + courseID + ";";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+
+                    /* Read all the records */
+                    while (reader.Read()) {
+                        UITreeViewNode groupNode = new UITreeViewNode(
+                                EntityConstants.EntityType.Group,
+                                Convert.ToString(reader["name"]),
+                                null,       /* Groups have no parent nodes */
+                                groupCMS
+                            );
+                        groupNode.id = Convert.ToInt32(reader["rowid"]);
+                        result.Add(groupNode);
+                    }
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+            }
+
+            return result;
+        }
+
+        /**
+         * Obtain all the students as UITreeView nodes, corr to a particular group
+         * NOTE: Assumes open DB Connection
+         */
+        private List<UITreeViewNode> getAllStudentNodes(int groupID, UITreeViewNode groupNode, ContextMenuStrip studentCMS) {
+            List<UITreeViewNode> result = new List<UITreeViewNode>();
+
+            SQLiteCommand command;
+            SQLiteDataReader reader;
+            string sql;
+            try {
+                using (command = new SQLiteCommand(this.dbConn)) {
+                    sql = @"
+                            SELECT 
+                            s.rowid, s.fname || ' ' || s.lname AS studName
+                            FROM students s
+                            LEFT JOIN student_belongs sb
+                            WHERE (
+	                            sb.groupID = " + groupID + @" AND
+	                            sb.studID = s.rowid
+                            );";
+
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    reader = command.ExecuteReader();
+
+                    /* Read all the records */
+                    while (reader.Read()) {
+                        UITreeViewNode studentNode = new UITreeViewNode(
+                                    EntityConstants.EntityType.Student,
+                                    Convert.ToString(reader["studName"]),
+                                    groupNode,       /* Parent of this student is given groupNode */
+                                    studentCMS
+                            );
+                        studentNode.id = Convert.ToInt32(reader["rowid"]);
+                        groupNode.Nodes.Add(studentNode);       /* Hook this assessment node to course node */
+                        result.Add(studentNode);
+                    }
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+            }
+            return result;
+        }
 
         #endregion
 

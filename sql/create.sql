@@ -82,3 +82,29 @@ VALUES (12,'(ii)',10,2,8);
 -- COMP3231: Quiz 1: Q3
 INSERT INTO components (rowid, name, marks, assessmentID, parentComponent)
 VALUES (13,'Q3',10,2,NULL);
+
+/* 
+Sample group (and students) for COMP3231:
+	Group A
+		-> Student 2
+		-> Student 2
+*/
+-- COMP3231: Group A
+INSERT INTO groups (rowid, name, courseID)
+VALUES(1, 'Group A', 1);
+
+-- Student A
+INSERT INTO students (rowid, fname, lname)
+VALUES (1, 'Student', 'A');
+
+-- Student B
+INSERT INTO students (rowid, fname, lname)
+VALUES (2, 'Student', 'B');
+
+-- Group A: Student 1
+INSERT INTO student_belongs (groupID, studID)
+VALUES (1, 1);
+
+-- Group A: Student 2
+INSERT INTO student_belongs (groupID, studID)
+VALUES (1, 2);
