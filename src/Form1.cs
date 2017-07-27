@@ -170,11 +170,15 @@ namespace MarkTracker {
                     e.Node.BeginEdit();
                 }
 
-                /* Update the name of the node in UI and DB */
+                /* Update the name of the node in DB an UI */
                 UITreeViewNode apNode = e.Node as UITreeViewNode;
-                apNode.Text = e.Label.ToString();
-                // this.db.updateName(apNode.type, apNode.id, apNode.text);
-                //System.Diagnostics.Debug.WriteLine("Changed name to: " + e.Label.ToString());
+                DBResult res = this.db.updateName(apNode.type, apNode.id, e.Label.ToString());
+                if (res.ecode == ErrorCode.OP_SUCCESS) {
+                    apNode.Text = e.Label.ToString();
+                } else {
+                    e.CancelEdit = true;
+                    this.showDBError(res);
+                }
             }
         }
 
@@ -249,11 +253,15 @@ namespace MarkTracker {
                     e.Node.BeginEdit();
                 }
 
-                /* Update the name of the node in UI and DB */
+                /* Update the name of the node in DB an UI */
                 UITreeViewNode ppNode = e.Node as UITreeViewNode;
-                ppNode.Text = e.Label.ToString();
-                // this.db.updateName(ppNode.type, ppNode.id, ppNode.text);
-                //System.Diagnostics.Debug.WriteLine("PPNode Changed name to: " + e.Label.ToString());
+                DBResult res = this.db.updateName(ppNode.type, ppNode.id, e.Label.ToString());
+                if (res.ecode == ErrorCode.OP_SUCCESS) {
+                    ppNode.Text = e.Label.ToString();
+                } else {
+                    e.CancelEdit = true;
+                    this.showDBError(res);
+                }
             }
         }
 
@@ -261,13 +269,9 @@ namespace MarkTracker {
          * Showing an error response from DB
          */
         private void showDBError(DBResult result) {
-            if (MessageBox.Show(result.ecode.ToString(), "", MessageBoxButtons.OKCancel)
-                == DialogResult.OK) {
-                /* Do nothing */
-            }
+            MessageBox.Show(result.ecode.ToString(), "", MessageBoxButtons.OKCancel);
         }
 
         #endregion
-
     }
 }

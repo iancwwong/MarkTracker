@@ -649,7 +649,70 @@ namespace MarkTracker.include.db {
          */
         public DBResult updateName(EntityConstants.EntityType type, 
                                     int id, string newName) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed)
+            {
+                Console.WriteLine("Error: DB not yet opened");
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+            
+            try {
+                SQLiteCommand command;
+                using (command = new SQLiteCommand(this.dbConn)) {
+
+                    /* Construct the appropriate SQL */
+                    switch (type) {
+                        case EntityConstants.EntityType.Course:
+                            command.CommandText = "UPDATE courses SET name = :newName WHERE rowid = :id";
+                            command.Parameters.Add("newName", System.Data.DbType.String).Value = newName;
+                            command.Parameters.Add("id", System.Data.DbType.Int32).Value = id;
+                            break;
+
+                        case EntityConstants.EntityType.Assessment:
+                            command.CommandText = "UPDATE assessments SET name = :newName WHERE rowid = :id";
+                            command.Parameters.Add("newName", System.Data.DbType.String).Value = newName;
+                            command.Parameters.Add("id", System.Data.DbType.Int32).Value = id;
+                            break;
+
+                        case EntityConstants.EntityType.Component:
+                            command.CommandText = "UPDATE components SET name = :newName WHERE rowid = :id";
+                            command.Parameters.Add("newName", System.Data.DbType.String).Value = newName;
+                            command.Parameters.Add("id", System.Data.DbType.Int32).Value = id;
+                            break;
+
+                        case EntityConstants.EntityType.Group:
+                            command.CommandText = "UPDATE groups SET name = :newName WHERE rowid = :id";
+                            command.Parameters.Add("newName", System.Data.DbType.String).Value = newName;
+                            command.Parameters.Add("id", System.Data.DbType.Int32).Value = id;
+                            break;
+
+                        case EntityConstants.EntityType.Student:
+                            /* 'name' for student is a little different
+                             * - needs to be parsed into firstname and lastname */
+                            /* FOR NOW, FIXED SPACE DELIMITERED FORMAT. ASSUMES VALID SPLIT */
+                            string[] nameComponents = newName.Split(' ');
+                            command.CommandText = "UPDATE students SET fname = :fname, lname = :lname WHERE rowid = :id";
+                            command.Parameters.Add("fname", System.Data.DbType.String).Value = nameComponents[0];
+                            command.Parameters.Add("lname", System.Data.DbType.String).Value = nameComponents[1];
+                            command.Parameters.Add("id", System.Data.DbType.Int32).Value = id;
+                            break;
+
+                        default:        /* should not get here */
+                            Console.WriteLine("REACHED UNREACHABLE SPOT function 'updateName' from DB!");
+                            break;  
+                    }
+                    command.ExecuteNonQuery();
+                }
+
+            } catch (SQLiteException e) {
+                Console.WriteLine("DB Error: " + e.Message);
+                /* SQL update error handlers go here */
+                /* FOR NOW, THROW ERROR UNKNOWN */
+                return new DBResult(ErrorCode.ERROR_UNKNOWN);
+            }
+
+            return new DBResult(DataLayerConstants.ErrorCode.OP_SUCCESS);
         }
 
         /**
@@ -684,9 +747,6 @@ namespace MarkTracker.include.db {
                     List<UITreeViewNode> componentNodes = this.getAllComponentNodes(assessmentNode.id, assessmentNode, componentCMS);
                 }
             }
-
-            /* For now, check DB has the data */
-            this.showDBCount();
 
             return result;
         }
