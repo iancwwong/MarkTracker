@@ -21,4 +21,4 @@ src/packages/
 # Sql stuff
 sql/*.db
 sql/*.mtdb
-sql/*.db-journal
+sql/*-journal
