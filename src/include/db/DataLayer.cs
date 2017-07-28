@@ -380,22 +380,8 @@ namespace MarkTracker.include.db {
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
-            
-            DBResult result;    /* DB Result to return */
-            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
-                try {
-                    command.CommandText = "DELETE FROM courses WHERE rowid = :courseID";
-                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
-                    command.ExecuteNonQuery();
-                    result = new DBResult(ErrorCode.OP_SUCCESS);
-                } catch (SQLiteException e) {
-                    Console.WriteLine("DB Error: " + e.Message);
-                    /* SQL update error handlers go here */
-                    /* FOR NOW, THROW ERROR UNKNOWN */
-                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
-                }
-            }
-            return result;
+
+            return this.deleteRecord("courses", courseID);
         }
 
         /**
@@ -442,28 +428,150 @@ namespace MarkTracker.include.db {
         * Adds a new assessment into the DB with the specified name
         */
         public DBResult addNewAssessment(string newAssessmentName, int courseID) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            /* DB Result to return */
+            DBResult result;
+
+            /* Create the new assessment */
+            /* NOTE: Assumes new assessment name is non-empty, and decently sanitised */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "INSERT INTO assessments(name, courseID) VALUES ( :newAssessmentName, :courseID )";
+                    command.Parameters.Add("newAssessmentName", System.Data.DbType.String).Value = newAssessmentName;
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
+                    command.ExecuteNonQuery();
+
+                    /* Get the ID of the newly added assessment object */
+                    command.Parameters.Clear();
+                    command.CommandText = "SELECT rowid FROM assessments WHERE name LIKE :newAssessmentName";
+                    command.Parameters.Add("newAssessmentName", System.Data.DbType.String).Value = newAssessmentName;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    int id = Convert.ToInt32(reader["rowid"]);
+                    result = new DBResult(ErrorCode.OP_SUCCESS, id);
+
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+
+                    /* Unique constraint failed - ie duplicate entry attempted */
+                    /* NOTE: Ideally, the if statement should say:
+                     *      e.ErrorCode == SQLiteErrorCode.Constraint_Unique 
+                     * which is more specific
+                     */
+                    if (e.ErrorCode == (int)SQLiteErrorCode.Constraint) {
+                        result = new DBResult(ErrorCode.ERROR_ASSESSMENT_ALREADY_EXISTS);
+                    }
+
+                    /* Unknown error */
+                    else {
+                        result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                    }
+                }
+            }
+            return result;
         }
 
         /**
          * Obtains an assessment object with the specified course ID
          */
         public DBResult getAssessmentObj(int assessmentID) {
-            return new DBResult(null);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "SELECT rowid, * FROM assessments WHERE rowid = :assessmentID";
+                    command.Parameters.Add("assessmentID", System.Data.DbType.Int32).Value = assessmentID;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
+
+                    /* Check if there are results */
+                    if (reader.HasRows) {
+                        /* Parse into course object, and attach to result */
+                        Assessment a = new Assessment();
+                        a.id = Convert.ToInt32(reader["rowid"]);
+                        a.name = reader["name"] as string;
+                        a.dueDate = Convert.ToDateTime(reader["dueDateTime"] as string);
+                        a.availableMarks = Convert.ToInt32(reader["marks"]);
+                        a.weighting = Convert.ToInt32(reader["weighting"]);
+                        a.comments = reader["comments"] as string;
+                        result = new DBResult(ErrorCode.OP_SUCCESS, a);
+                    } else {
+                        result = new DBResult(ErrorCode.ERROR_ASSESSMENT_NOT_EXIST);
+                    }
+
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
+            }
+            return result;
         }
 
         /**
          * Removes an assessmente from the DB with the specified ID
          */
         public DBResult deleteAssessment(int assessmentID) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            return this.deleteRecord("assessments", assessmentID);
         }
 
         /**
          * Updates an assessment given a assessment object
          */
         public DBResult updateAssessment(Assessment a) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = @"
+                        UPDATE assessments SET 
+                            name = :newAssessmentName,
+                            dueDateTime = :newDueDateTime,
+                            marks = :newMark,
+                            weighting = :newWeighting,
+                            comments = :newComments
+                        WHERE rowid = :assessmentID";
+                    command.Parameters.Add("assessmentID", System.Data.DbType.Int32).Value = a.id;
+                    command.Parameters.Add("newAssessmentName", System.Data.DbType.String).Value = a.name;
+                    command.Parameters.Add("newDueDateTime", System.Data.DbType.String).Value = a.dueDate;
+                    command.Parameters.Add("newMark", System.Data.DbType.Int32).Value = a.availableMarks;
+                    command.Parameters.Add("newWeighting", System.Data.DbType.Int32).Value = a.weighting;
+                    command.Parameters.Add("newComments", System.Data.DbType.String).Value = a.comments;
+                    command.ExecuteNonQuery();
+                    result = new DBResult(ErrorCode.OP_SUCCESS);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
+            }
+            return result;
         }
 
         #endregion
@@ -880,7 +988,7 @@ namespace MarkTracker.include.db {
             using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
                 try {
                     command.CommandText = "SELECT rowid,* FROM assessments WHERE courseID = :courseID";
-                    command.Parameters.Add(":courseID", System.Data.DbType.Int32).Value = courseID;
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
                     command.ExecuteNonQuery();
                     SQLiteDataReader reader = command.ExecuteReader();
 
@@ -924,7 +1032,7 @@ namespace MarkTracker.include.db {
                     command.CommandText = @"SELECT rowid,* FROM components 
                             WHERE (assessmentID = :assessmentID)
                             ORDER BY parentComponent ASC, rowid ASC;";
-                    command.Parameters.Add(":assessmentID", System.Data.DbType.Int32).Value = assessmentID;
+                    command.Parameters.Add("assessmentID", System.Data.DbType.Int32).Value = assessmentID;
                     command.ExecuteNonQuery();
                     SQLiteDataReader reader = command.ExecuteReader();
 
@@ -983,7 +1091,7 @@ namespace MarkTracker.include.db {
             using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
                 try {
                     command.CommandText = "SELECT rowid,* FROM groups WHERE courseID = :courseID";
-                    command.Parameters.Add(":courseID", System.Data.DbType.Int32).Value = courseID;
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
                     command.ExecuteNonQuery();
                     SQLiteDataReader reader = command.ExecuteReader();
 
@@ -1023,7 +1131,7 @@ namespace MarkTracker.include.db {
 	                            sb.groupID = :groupID AND
 	                            sb.studID = s.rowid
                             );";
-                    command.Parameters.Add(":groupID", System.Data.DbType.Int32).Value = groupID;
+                    command.Parameters.Add("groupID", System.Data.DbType.Int32).Value = groupID;
                     command.ExecuteNonQuery();
                     SQLiteDataReader reader = command.ExecuteReader();
 
@@ -1047,7 +1155,29 @@ namespace MarkTracker.include.db {
             return result;
         }
 
-        #endregion
+        /**
+         * Removes a specific record from a table.
+         * Assumes DB connection is open.
+         */
+        private DBResult deleteRecord(string tableName, int recordID) {
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "DELETE FROM :tableName WHERE rowid = :recordID";
+                    command.Parameters.Add("tableName", System.Data.DbType.String).Value = tableName;
+                    command.Parameters.Add("recordID", System.Data.DbType.Int32).Value = recordID;
+                    command.ExecuteNonQuery();
+                    result = new DBResult(ErrorCode.OP_SUCCESS);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
+            }
+            return result;
+        }
 
+        #endregion
     }
 }
