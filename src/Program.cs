@@ -17,8 +17,8 @@ namespace MarkTracker {
             Application.Run(new markTrackerForm());
 
             /* Test the database */
-            //dbtester dbtester = new dbtester();
-            //dbtester.run();
+            //DBTester dbtester = new DBTester();
+            //dbtester.Run();
         }
     }
 }

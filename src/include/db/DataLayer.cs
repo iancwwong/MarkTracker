@@ -241,16 +241,25 @@ namespace MarkTracker.include.db {
          */
         public DBResult dbInitialised() {
 
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
             /* Count the number of tables in the data source.
              * There should be 8:
              *  - Course, Assessment, Component, Group, Student,
              *    student_belongs, group_participate, and smi
              */
-            string sql = "SELECT count(*) as numTables FROM sqlite_master WHERE type = 'table' ORDER BY 1;";
-            SQLiteCommand command = new SQLiteCommand(sql, this.dbConn);
-            SQLiteDataReader reader = command.ExecuteReader();
-            reader.Read();
-            int numTables = Convert.ToInt32(reader["numTables"]);
+            int numTables;
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                string sql = "SELECT count(*) as numTables FROM sqlite_master WHERE type = 'table' ORDER BY 1;";
+                command.CommandText = sql;
+                SQLiteDataReader reader = command.ExecuteReader();
+                reader.Read();
+                numTables = Convert.ToInt32(reader["numTables"]);
+            }
             if (numTables != 8) {
                 return new DBResult(false);
             }
@@ -271,56 +280,51 @@ namespace MarkTracker.include.db {
          */
         public DBResult addNewCourse(string newCourseName) {
 
-            /* DB Result to return */
-            DBResult result;
-
             /* Check that the current database is opened */
             if (this.dbConn == null
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
 
-            /* Prepare command object */
-            SQLiteCommand command = new SQLiteCommand(this.dbConn);
+            /* DB Result to return */
+            DBResult result;
 
             /* Create the new course */
-            /* NOTE: Assumes newCourseName is sanitised */
-            string sql = "INSERT INTO courses(name) VALUES ('" + newCourseName + "');";
-            try {
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
+            /* NOTE: Assumes newCourseName is non-empty, and decently sanitised */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "INSERT INTO courses(name) VALUES ( :newCourseName )";
+                    command.Parameters.Add("newCourseName", System.Data.DbType.String).Value = newCourseName;
+                    command.ExecuteNonQuery();
 
-                /* Get the ID of the newly added course object */
-                sql = "SELECT rowid FROM courses WHERE name LIKE '" + newCourseName + "';";
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
-                SQLiteDataReader reader = command.ExecuteReader();
-                reader.Read();
-                int id = Convert.ToInt32(reader["rowid"]);
-                result = new DBResult(ErrorCode.OP_SUCCESS, id);
+                    /* Get the ID of the newly added course object */
+                    command.Parameters.Clear();
+                    command.CommandText = "SELECT rowid FROM courses WHERE name LIKE :newCourseName";
+                    command.Parameters.Add("newCourseName", System.Data.DbType.String).Value = newCourseName;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    int id = Convert.ToInt32(reader["rowid"]);
+                    result = new DBResult(ErrorCode.OP_SUCCESS, id);
 
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
 
-                /* Unique constraint failed - ie duplicate entry attempted */
-                /* NOTE: Ideally, the if statement should say:
-                 *      e.ErrorCode == SQLiteErrorCode.Constraint_Unique 
-                 * which is more specific
-                 */
-                if (e.ErrorCode == (int)SQLiteErrorCode.Constraint) { 
-                    result = new DBResult(ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+                    /* Unique constraint failed - ie duplicate entry attempted */
+                    /* NOTE: Ideally, the if statement should say:
+                     *      e.ErrorCode == SQLiteErrorCode.Constraint_Unique 
+                     * which is more specific
+                     */
+                    if (e.ErrorCode == (int)SQLiteErrorCode.Constraint) {
+                        result = new DBResult(ErrorCode.ERROR_COURSE_ALREADY_EXISTS);
+                    }
+
+                    /* Unknown error */
+                    else {
+                        result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                    }
                 }
-
-                /* Unknown error */
-                else {
-                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
-                }
-
-            } finally {
-                /* Dispose the command object */
-                command.Dispose();
-                GC.Collect();   /* forced garbage collector clean up */
             }
             return result;
         }
@@ -329,47 +333,40 @@ namespace MarkTracker.include.db {
          * Obtains a course object with the specified course ID
          */
         public DBResult getCourseObj(int courseID) {
-
-            /* DB Result to return */
-            DBResult result;
-
+            
             /* Check that the current database is opened */
             if (this.dbConn == null
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
+            
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "SELECT rowid, * FROM courses WHERE rowid = :courseID";
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
 
-            /* Attempt to retrieve the course using the id */
-            SQLiteCommand command = new SQLiteCommand(this.dbConn);
-            try {
-                string sql = "SELECT rowid,name FROM courses WHERE rowid = " + courseID + ";";
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
-                SQLiteDataReader reader = command.ExecuteReader();
-                reader.Read();
+                    /* Check if there are results */
+                    if (reader.HasRows) {
+                        /* Parse into course object, and attach to result */
+                        Course c = new Course();
+                        c.id = Convert.ToInt32(reader["rowid"]);
+                        c.name = reader["name"] as string;
+                        result = new DBResult(ErrorCode.OP_SUCCESS, c);
+                    } else {
+                        result = new DBResult(ErrorCode.ERROR_COURSE_NOT_EXIST);
+                    }
 
-                /* Check if there are results */
-                if (reader.HasRows) {
-                    /* Parse into course object, and attach to result */
-                    Course c = new Course();
-                    c.id = Convert.ToInt32(reader["rowid"]);
-                    c.name = reader["name"] as string;
-                    result = new DBResult(ErrorCode.OP_SUCCESS, c);
-                } else {
-                    result = new DBResult(ErrorCode.ERROR_COURSE_NOT_EXIST);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-                /* FOR NOW, THROW ERROR UNKNOWN */
-                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
-            } finally {
-                /* Dispose the command object */
-                command.Dispose();
-                GC.Collect();   /* forced garbage collector clean up */
             }
-
             return result;
         }
 
@@ -378,34 +375,26 @@ namespace MarkTracker.include.db {
          */
         public DBResult deleteCourse(int courseID) {
 
-            /* DB Result to return */
-            DBResult result;
-
             /* Check that the current database is opened */
             if (this.dbConn == null
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
-
-            /* Attempt to retrieve the course using the id */
-            SQLiteCommand command = new SQLiteCommand(this.dbConn);
-            try {
-                string sql = "DELETE FROM courses WHERE rowid = " + courseID + ";";
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
-                result = new DBResult(ErrorCode.OP_SUCCESS);
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-                /* FOR NOW, THROW ERROR UNKNOWN */
-                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
-            } finally {
-                /* Dispose the command object */
-                command.Dispose();
-                GC.Collect();   /* forced garbage collector clean up */
+            
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "DELETE FROM courses WHERE rowid = :courseID";
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = courseID;
+                    command.ExecuteNonQuery();
+                    result = new DBResult(ErrorCode.OP_SUCCESS);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
             }
-
             return result;
         }
 
@@ -414,37 +403,29 @@ namespace MarkTracker.include.db {
          */
         public DBResult updateCourse(Course c) {
 
-            /* DB Result to return */
-            DBResult result;
-
             /* Check that the current database is opened */
             if (this.dbConn == null
                 || this.dbConn.State == System.Data.ConnectionState.Closed) {
                 return new DBResult(ErrorCode.ERROR_DB_CLOSED);
             }
+            
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
 
-            /* Attempt to retrieve the course using the id */
-            SQLiteCommand command = new SQLiteCommand(this.dbConn);
-            try {
-
-                /* NOTE: We only need to change the name */
-                string sql = 
-                    @"UPDATE courses SET name = '" + c.name + "' WHERE rowid = " + c.id + ";";
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
-                result = new DBResult(ErrorCode.OP_SUCCESS);
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-                /* FOR NOW, THROW ERROR UNKNOWN */
-                result = new DBResult(ErrorCode.ERROR_UNKNOWN);
-            } finally {
-                /* Dispose the command object */
-                command.Dispose();
-                GC.Collect();   /* forced garbage collector clean up */
+                    /* NOTE: Only the 'name' field is changeable for a course */
+                    command.CommandText = "UPDATE courses SET name = :newCourseName WHERE rowid = :courseID";
+                    command.Parameters.Add("courseID", System.Data.DbType.Int32).Value = c.id;
+                    command.Parameters.Add("newCourseName", System.Data.DbType.String).Value = c.name;
+                    command.ExecuteNonQuery();
+                    result = new DBResult(ErrorCode.OP_SUCCESS);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
             }
-
             return result;
         }
 
@@ -863,35 +844,29 @@ namespace MarkTracker.include.db {
          */
         private List<UITreeViewNode> getAllCourseNodes(ContextMenuStrip courseCMS) {
             List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
-
-            SQLiteCommand command;
-            SQLiteDataReader reader;
-            string sql;
-            try {
-                using (command = new SQLiteCommand(this.dbConn)) {
-                    sql = "SELECT rowid,* FROM courses;";
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    string sql = "SELECT rowid,* FROM courses;";
                     command.CommandText = sql;
                     command.ExecuteNonQuery();
-                    reader = command.ExecuteReader();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
                     /* Read all the records */
                     while (reader.Read()) {
                         UITreeViewNode courseNode = new UITreeViewNode(
                                 EntityConstants.EntityType.Course,
                                 Convert.ToString(reader["name"]),
-                                null ,       /* Courses have no parent nodes */
+                                null,       /* Courses have no parent nodes */
                                 courseCMS
                             );
                         courseNode.id = Convert.ToInt32(reader["rowid"]);
                         result.Add(courseNode);
                     }
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-            } 
-
+            }
             return result;
         }
 
@@ -901,17 +876,13 @@ namespace MarkTracker.include.db {
          */
         private List<UITreeViewNode> getAllAssessmentNodes(int courseID, UITreeViewNode courseNode, ContextMenuStrip assessmentCMS) {
 
-            List<UITreeViewNode> result = new List<UITreeViewNode>();
-
-            SQLiteCommand command;
-            SQLiteDataReader reader;
-            string sql;
-            try {
-                using (command = new SQLiteCommand(this.dbConn)) {
-                    sql = "SELECT rowid,* FROM assessments WHERE courseID = " + courseID + ";";
-                    command.CommandText = sql;
+            List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "SELECT rowid,* FROM assessments WHERE courseID = :courseID";
+                    command.Parameters.Add(":courseID", System.Data.DbType.Int32).Value = courseID;
                     command.ExecuteNonQuery();
-                    reader = command.ExecuteReader();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
                     /* Read all the records */
                     while (reader.Read()) {
@@ -925,11 +896,10 @@ namespace MarkTracker.include.db {
                         courseNode.Nodes.Add(assessmentNode);       /* Hook this assessment node to course node */
                         result.Add(assessmentNode);
                     }
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
             }
             return result;
         }
@@ -942,13 +912,8 @@ namespace MarkTracker.include.db {
         private List<UITreeViewNode> getAllComponentNodes(int assessmentID, UITreeViewNode assessmentNode, ContextMenuStrip componentCMS) {
 
             List<UITreeViewNode> result = new List<UITreeViewNode>();
-
-            SQLiteCommand command;
-            SQLiteDataReader reader;
-            string sql;
-            try {
-                using (command = new SQLiteCommand(this.dbConn)) {
-
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
                     /* NOTE: This is a hacky method to obtain components and 
                      * hook them to each other appropriately, exploiting the
                      * fact that the componentID < parentID.
@@ -956,12 +921,12 @@ namespace MarkTracker.include.db {
                      * This sql statement provides the records with the above
                      * property. In particular, it'll show the components in 
                      * increasing tree depth (root -> 1st level -> 2nd level etc.) */
-                    sql = @"SELECT rowid,* FROM components 
-                            WHERE (assessmentID = " + assessmentID + @")
+                    command.CommandText = @"SELECT rowid,* FROM components 
+                            WHERE (assessmentID = :assessmentID)
                             ORDER BY parentComponent ASC, rowid ASC;";
-                    command.CommandText = sql;
+                    command.Parameters.Add(":assessmentID", System.Data.DbType.Int32).Value = assessmentID;
                     command.ExecuteNonQuery();
-                    reader = command.ExecuteReader();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
                     /* Read all the records */
                     while (reader.Read()) {
@@ -1001,12 +966,11 @@ namespace MarkTracker.include.db {
                         }
                         result.Add(componentNode);
                     }
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-            }
+            } 
             return result;
         }
 
@@ -1016,16 +980,12 @@ namespace MarkTracker.include.db {
          */
         private List<UITreeViewNode> getAllGroupNodes(int courseID, ContextMenuStrip groupCMS) {
             List<UITreeViewNode> result = new List<UITreeViewNode>();   /* Hold the final result */
-
-            SQLiteCommand command;
-            SQLiteDataReader reader;
-            string sql;
-            try {
-                using (command = new SQLiteCommand(this.dbConn)) {
-                    sql = "SELECT rowid,* FROM groups WHERE rowid = " + courseID + ";";
-                    command.CommandText = sql;
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "SELECT rowid,* FROM groups WHERE courseID = :courseID";
+                    command.Parameters.Add(":courseID", System.Data.DbType.Int32).Value = courseID;
                     command.ExecuteNonQuery();
-                    reader = command.ExecuteReader();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
                     /* Read all the records */
                     while (reader.Read()) {
@@ -1038,13 +998,11 @@ namespace MarkTracker.include.db {
                         groupNode.id = Convert.ToInt32(reader["rowid"]);
                         result.Add(groupNode);
                     }
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
-            }
-
+            } 
             return result;
         }
 
@@ -1054,25 +1012,20 @@ namespace MarkTracker.include.db {
          */
         private List<UITreeViewNode> getAllStudentNodes(int groupID, UITreeViewNode groupNode, ContextMenuStrip studentCMS) {
             List<UITreeViewNode> result = new List<UITreeViewNode>();
-
-            SQLiteCommand command;
-            SQLiteDataReader reader;
-            string sql;
-            try {
-                using (command = new SQLiteCommand(this.dbConn)) {
-                    sql = @"
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = @"
                             SELECT 
                             s.rowid, s.fname || ' ' || s.lname AS studName
                             FROM students s
                             LEFT JOIN student_belongs sb
                             WHERE (
-	                            sb.groupID = " + groupID + @" AND
+	                            sb.groupID = :groupID AND
 	                            sb.studID = s.rowid
                             );";
-
-                    command.CommandText = sql;
+                    command.Parameters.Add(":groupID", System.Data.DbType.Int32).Value = groupID;
                     command.ExecuteNonQuery();
-                    reader = command.ExecuteReader();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
                     /* Read all the records */
                     while (reader.Read()) {
@@ -1086,11 +1039,10 @@ namespace MarkTracker.include.db {
                         groupNode.Nodes.Add(studentNode);       /* Hook this assessment node to course node */
                         result.Add(studentNode);
                     }
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
                 }
-
-            } catch (SQLiteException e) {
-                Console.WriteLine("DB Error: " + e.Message);
-                /* SQL update error handlers go here */
             }
             return result;
         }
