@@ -9,13 +9,13 @@ namespace MarkTracker.include.entities {
     /**
      * Represents an assessment component
      */
-    public class AssessmentComponent {
+    public class Component {
         public int id { get; set; }
         public string name { get; set; }
         public int totalMark { get; set; }
         public string comments { get; set; }
 
         /* Constructor */
-        public AssessmentComponent() { }
+        public Component() { }
     }
 }

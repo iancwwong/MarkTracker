@@ -141,7 +141,7 @@ namespace MarkTracker.include.db {
          */
         DBResult addNewComponent(string newComponentName, 
                             Nullable<int> parentComponentID,        
-                            Nullable<int> associatedAssessmentID);
+                            int associatedAssessmentID);
 
         /**
          * Obtains a component object with the specified ID
@@ -156,7 +156,7 @@ namespace MarkTracker.include.db {
         /**
          * Updates a component given a component object
          */
-        DBResult updateComponent(AssessmentComponent ac);
+        DBResult updateComponent(Component ac);
 
         #endregion
 

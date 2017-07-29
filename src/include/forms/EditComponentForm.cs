@@ -11,10 +11,10 @@ namespace MarkTracker.include.forms {
     public partial class EditComponentForm : MarkTracker.include.forms.EditForm {
 
         /* Component attribute */
-        private AssessmentComponent component;
+        private entities.Component component;
 
         /* Constructor */
-        public EditComponentForm(AssessmentComponent c) {
+        public EditComponentForm(entities.Component c) {
             InitializeComponent();
             this.component = c;
 

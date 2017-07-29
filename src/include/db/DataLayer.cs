@@ -499,7 +499,7 @@ namespace MarkTracker.include.db {
 
                     /* Check if there are results */
                     if (reader.HasRows) {
-                        /* Parse into course object, and attach to result */
+                        /* Parse into assessment object, and attach to result */
                         Assessment a = new Assessment();
                         a.id = Convert.ToInt32(reader["rowid"]);
                         a.name = reader["name"] as string;
@@ -590,29 +590,176 @@ namespace MarkTracker.include.db {
          */
         public DBResult addNewComponent(string newComponentName,
                             Nullable<int> parentComponentID,
-                            Nullable<int> associatedAssessmentID) {
-            return new DBResult(DataLayerConstants.ErrorCode.ERROR_UNKNOWN);
+                            int associatedAssessmentID) {
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            /* DB Result to return */
+            DBResult result;
+
+            /* Create the new course */
+            /* NOTE: Assumes newCourseName is non-empty, and decently sanitised */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+
+                    /* Only insert record with name and assessment 
+                       when no given parent component */
+                    if (parentComponentID == null) {
+                        command.CommandText = @"
+                        INSERT INTO components(name, assessmentID) 
+                        VALUES ( 
+                            :newComponentName,
+                            :assessmentID
+                        )";
+                    } else {
+                        command.CommandText = @"
+                        INSERT INTO components(name, assessmentID, parentComponent) 
+                        VALUES ( 
+                            :newComponentName,
+                            :assessmentID,
+                            :parentComponent
+                        )";
+                        command.Parameters.Add("parentComponent", System.Data.DbType.Int32).Value = parentComponentID;
+                    }
+                    command.Parameters.Add("newComponentName", System.Data.DbType.String).Value = newComponentName;
+                    command.Parameters.Add("assessmentID", System.Data.DbType.Int32).Value = associatedAssessmentID;
+                    command.ExecuteNonQuery();
+
+                    /* Get the ID of the newly added component object */
+                    command.Parameters.Clear();
+                    if (parentComponentID == null) {
+                        command.CommandText = @"SELECT rowid FROM components WHERE (
+                                                    name LIKE :newComponentName
+                                                    AND assessmentID = :assessmentID
+                                                    AND parentComponent IS null";
+                    } else {
+                        command.CommandText = @"SELECT rowid FROM components WHERE (
+                                                    name LIKE :newComponentName
+                                                    AND assessmentID = :assessmentID
+                                                    AND parentComponent = :parentComponent";
+                        command.Parameters.Add("parentComponent", System.Data.DbType.Int32).Value = parentComponentID;
+                    }
+                    command.Parameters.Add("newComponentName", System.Data.DbType.String).Value = newComponentName;
+                    command.Parameters.Add("assessmentID", System.Data.DbType.Int32).Value = associatedAssessmentID;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    int id = Convert.ToInt32(reader["rowid"]);
+                    result = new DBResult(ErrorCode.OP_SUCCESS, id);
+
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+
+                    /* Unique constraint failed - ie duplicate entry attempted */
+                    /* NOTE: Ideally, the if statement should say:
+                     *      e.ErrorCode == SQLiteErrorCode.Constraint_Unique 
+                     * which is more specific
+                     */
+                    if (e.ErrorCode == (int)SQLiteErrorCode.Constraint) {
+                        result = new DBResult(ErrorCode.ERROR_COMPONENT_ALREADY_EXISTS);
+                    }
+
+                    /* Unknown error */
+                    else {
+                        result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                    }
+                }
+            }
+            return result;
         }
 
         /**
          * Obtains a component object with the specified ID
          */
         public DBResult getComponentObj(int componentID) {
-            return null;
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = "SELECT rowid, * FROM components WHERE rowid = :componentID";
+                    command.Parameters.Add("componentID", System.Data.DbType.Int32).Value = componentID;
+                    command.ExecuteNonQuery();
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    reader.Read();
+
+                    /* Check if there are results */
+                    if (reader.HasRows) {
+                        /* Parse into course object, and attach to result */
+                        Component c = new Component();
+                        c.id = Convert.ToInt32(reader["rowid"]);
+                        c.name = reader["name"] as string;
+                        c.totalMark = Convert.ToInt32(reader["marks"]);
+                        c.comments = reader["comments"] as string;
+                        result = new DBResult(ErrorCode.OP_SUCCESS, c);
+                    } else {
+                        result = new DBResult(ErrorCode.ERROR_COMPONENT_NOT_EXIST);
+                    }
+
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
+            }
+            return result;
         }
 
         /**
          * Removes a component from the DB with the specified ID
          */
         public DBResult deleteComponent(int componentID) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            return this.deleteRecord("components", componentID);
         }
 
         /**
          * Updates a component given a component object
          */
-        public DBResult updateComponent(AssessmentComponent ac) {
-            return new DBResult(ErrorCode.ERROR_UNKNOWN);
+        public DBResult updateComponent(Component ac) {
+            /* Check that the current database is opened */
+            if (this.dbConn == null
+                || this.dbConn.State == System.Data.ConnectionState.Closed) {
+                return new DBResult(ErrorCode.ERROR_DB_CLOSED);
+            }
+
+            DBResult result;    /* DB Result to return */
+            using (SQLiteCommand command = new SQLiteCommand(this.dbConn)) {
+                try {
+                    command.CommandText = @"
+                        UPDATE components SET 
+                            name = :newComponentName,
+                            marks = :newMark,
+                            comments = :newComments
+                        WHERE rowid = :componentID";
+                    command.Parameters.Add("componentID", System.Data.DbType.Int32).Value = ac.id;
+                    command.Parameters.Add("newComponentName", System.Data.DbType.String).Value = ac.name;
+                    command.Parameters.Add("newMark", System.Data.DbType.Int32).Value = ac.totalMark;
+                    command.Parameters.Add("newComments", System.Data.DbType.String).Value = ac.comments;
+                    command.ExecuteNonQuery();
+                    result = new DBResult(ErrorCode.OP_SUCCESS);
+                } catch (SQLiteException e) {
+                    Console.WriteLine("DB Error: " + e.Message);
+                    /* SQL update error handlers go here */
+                    /* FOR NOW, THROW ERROR UNKNOWN */
+                    result = new DBResult(ErrorCode.ERROR_UNKNOWN);
+                }
+            }
+            return result;
         }
 
         #endregion

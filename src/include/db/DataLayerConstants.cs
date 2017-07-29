@@ -29,7 +29,10 @@ namespace MarkTracker.include.db {
             ERROR_ASSESSMENT_ALREADY_EXISTS = 8,
             ERROR_ASSESSMENT_NOT_EXIST = 9,
 
-            ERROR_UNKNOWN = 9999,
+            ERROR_COMPONENT_ALREADY_EXISTS = 10,
+            ERROR_COMPONENT_NOT_EXIST = 11,
+
+            ERROR_UNKNOWN = 9999
         }
 
         /* For the sake of no magic values */
