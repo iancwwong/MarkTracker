@@ -14,3 +14,4 @@ Note this will require manually disabling menu items (eg when right-clicking a c
 
 ## Todo
 * Use Entity Framework (ORM) instead of hardcoded DB class
+* DB Class: Use recursive deletion!
